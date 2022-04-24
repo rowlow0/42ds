@@ -13,7 +13,7 @@ int pushLS(LinkedStack* ls, StackNode el)
     if(ls)
     {
         StackNode *tmp = ls->pTopElement;
-        if(tmp)
+        if(tmp && ls->currentElementCount)
         {
             tmp->tail->pLink = malloc(sizeof(StackNode));
             *(tmp->tail->pLink) = el;
@@ -38,7 +38,6 @@ StackNode* popLS(LinkedStack** pStack)
     {
         StackNode * t = (*pStack)->pTopElement;
         free((*pStack)->pTopElement->tail);
-        (*pStack)->pTopElement->tail = 0;
         (*pStack)->currentElementCount--;
         for(int i = 1; i < (*pStack)->currentElementCount; i++)
             t = t->pLink;
