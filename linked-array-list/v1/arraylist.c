@@ -68,7 +68,7 @@ void addALElement(ArrayList *ls, int index, ArrayListNode element)
         }
         ls->array[ls->count++]=element;
     }
-    printf("index %d added\n",index);
+    printf("index %d added\n", index);
 }
 
 void removeALElement(ArrayList *ls, int index)
