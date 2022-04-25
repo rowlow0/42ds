@@ -53,11 +53,12 @@ StackNode* popLS(LinkedStack** pStack)
 
 StackNode* peekLS(LinkedStack* pStack)
 {
-    if(pStack)
+    if(pStack && pStack->pTopElement)
         return pStack->pTopElement->tail;
     else
         return FALSE;
 }
+
 void deleteLinkedStack(LinkedStack** pStack)
 {
     if(pStack)
@@ -92,7 +93,42 @@ int isLinkedStackEmpty(LinkedStack* pStack)
         return FALSE;
 }
 
+//checking bracket
+int	checkBracketMatching(LinkedStack* pStack)
+{
+    int result = TRUE;
+    char c, k;
+    if(pStack)
+    {
+        LinkedStack* tStack = createLinkedStack();
+        StackNode *character = pStack->pTopElement;
+        while(character)
+        {
+            k = character->data; 
+            if(strchr("([{", k))
+                pushLS(tStack, *character);
+            else if (strchr(")]}", k))
+            {
+                c = peekLS(tStack) ? peekLS(tStack)->data : -1;
+                if((k == ')' && c != '(') || (k == ']' && c != '[') || (k == '}' && c != '{'))
+                {
+                    result = FALSE;
+                    break;
+                }
+                popLS(&tStack);
+            }
+                character = character->pLink;
+        }
+        if(!isLinkedStackEmpty(tStack))
+            result = FALSE;
+        deleteLinkedStack(&tStack);
+        return result;
+    }
+    else
+        return FALSE;
+}
 
+/*reverse*/
 void reverseLinkedStack(LinkedStack* s)
 {
     LinkedStack* saver = malloc(sizeof(LinkedStack));
@@ -125,6 +161,31 @@ int main()
         pushLS(p,el);
     }
     reverseLinkedStack(p);
+    deleteLinkedStack(&p);
+    p = createLinkedStack();
+    el.data = '(';
+    pushLS(p, el);
+    el.data = '5';
+    pushLS(p, el);
+    el.data = '+';
+    pushLS(p, el);
+    el.data = '4';
+    pushLS(p, el);
+    el.data = ')';
+    pushLS(p, el);
+    //pushLS(p, el);
+    el.data = '*';
+    pushLS(p, el);
+    el.data = '2';
+    pushLS(p, el);
+    if(checkBracketMatching(p))
+    {
+        printf("ok!\n");
+    }
+    else
+    {
+        printf("noo..\n");
+    }
     deleteLinkedStack(&p);
     system("leaks a.out");
     return 0;
