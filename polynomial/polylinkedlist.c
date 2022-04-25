@@ -161,7 +161,7 @@ void displayPolyLinkedList(PolyLinkedList *ls)
     else
     {
         PolyListNode *tmp = ls->head;
-        for(int i = 0;i< ls->count; i++,tmp = tmp->next)
+        for(int i = 0;i< ls->count; i++, tmp = tmp->next)
         {
             printf("%dx", tmp->data);
             if (i > 1)
