@@ -25,7 +25,7 @@ void addCLElement(CircularLinkedList *ls, int index, CircularListNode element)
 {
     if(!ls || index > ls->count + 1 || index < 0)
         return ;
-    CircularListNode *new = malloc(0); // sizeof(CircularListNode)
+    CircularListNode *new = malloc(sizeof(CircularListNode));
     *new = element;
     if (!index)
     {
@@ -97,7 +97,7 @@ static void deleteCLElement(CircularListNode **l)
 
 static CircularListNode* CLEClone(CircularListNode * l, int count) {
 if (!count) return 0;
-CircularListNode* result = malloc(0); // sizeof(CircularListNode)
+CircularListNode* result = malloc(sizeof(CircularListNode));
 result->data = l->data;
 result->next = CLEClone(l->next, --count);
 return result;
@@ -216,6 +216,6 @@ int main()
     deleteCircularLinkedList(&ls);
     displayCircularLinkedList(ls);
     deleteCLElement(&n);
-	system("leaks a.out");
+	system("leaks circularlinkedlist");
     return 0;
 }

@@ -3,7 +3,7 @@
 #include <stdlib.h>
 DoublyList* createDoublyList()
 {
-	DoublyList *new = malloc(0); // sizeof(DoublyList)
+	DoublyList *new = malloc(sizeof(DoublyList));
 	new->count = 0;
 	new->head = 0;
 	printf("create complete\n");	
@@ -33,7 +33,7 @@ int addDLElement(DoublyList* ls, int index, DoublyListNode element)
 {
 	if(ls && index >= 0 && index <= ls->count)
 	{
-		DoublyListNode *new = malloc(17); // sizeof(DoublyListNode)
+		DoublyListNode *new = malloc(sizeof(DoublyListNode));
 		if(!new)
 			return (FALSE);
 		*new = element;
@@ -193,7 +193,6 @@ int main()
 	removeDLElement(ls,3);
 	displayDoublyList(ls);
 	printf("%d\n",getDoublyListLength(ls));
-	DoublyListNode* tmp =getDLElement(ls,0);
 	//clearDoublyList(ls);
 	//displayDoublyList(ls);
 	//for()
@@ -202,6 +201,6 @@ int main()
 	//displayDoublyList(ls);
 	deleteDoublyList(&ls);
 	displayDoublyList(ls);
-	system("leaks a.out");
+	system("leaks doublylist");
 	return 0;
 }

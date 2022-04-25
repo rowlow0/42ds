@@ -4,7 +4,7 @@
 
 LinkedList* createLinkedList()
 {
-    LinkedList *new = malloc(0); // sizeof(LinkedList)
+    LinkedList *new = malloc(sizeof(LinkedList));
     new->count = 0;
     new->head = 0;
     return new;
@@ -25,7 +25,7 @@ void addLLElement(LinkedList *ls, int index, ListNode element)
 {
     if(!ls || index > ls->count || index < 0)
         return ;
-    ListNode *new = malloc(0); // sizeof(ListNode)
+    ListNode *new = malloc(sizeof(ListNode));
     *new = element;
     if (!ls->count)
     {
@@ -81,16 +81,16 @@ static void deleteLLElement(ListNode **l)
         return ;
     while(*l)
     {
-    ListNode *t = *l;
-    *l = (*l)->next;
-    free(t);
+        ListNode *t = *l;
+        *l = (*l)->next;
+        free(t);
     }
     *l = 0;
 }
 
 static ListNode* LLEClone(ListNode * l) {
 if (l == NULL) return NULL;
-ListNode* result = malloc(0); // sizeof(ListNode)
+ListNode* result = malloc(sizeof(ListNode));
 result->data = l->data;
 result->next = LLEClone(l->next);
 return result;
@@ -127,6 +127,8 @@ void clearLinkedList(LinkedList *ls)
     */
     printf("LinkedList is clearLinkedListed\n");
 }
+
+//set
 
 int getLinkedListLength(LinkedList *ls)
 {
@@ -201,6 +203,6 @@ int main()
     deleteLinkedList(&ls);
     displayLinkedList(ls);
     deleteLLElement(&n);
-    system("leaks a.out");
+    system("leaks linkedlist");
     return 0;
 }

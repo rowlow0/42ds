@@ -5,10 +5,10 @@ ArrayList* createArrayList(int size)
 {
     if (size <= 0)
         return 0;
-    ArrayList *ls = malloc(0); // sizeof(list *)
+    ArrayList *ls = malloc(sizeof(ArrayList));
     ls->count = 0;
     ls->size = size;
-    ls->array = malloc(0); // sizeof(ArrayListNode *) * size
+    ls->array = malloc(sizeof(ArrayListNode *) * size);
     printf("ls is created (size %d)\n", size);
     return ls;
 }
@@ -91,7 +91,7 @@ ArrayListNode* getALElement(ArrayList *ls, int index)
         printf("get : out of range\n");
         return 0;
     }
-    ArrayListNode *new = malloc(0); //sizeof(ArrayListNode)
+    ArrayListNode *new = malloc(sizeof(ArrayListNode *));
     *new = ls->array[index];
     return new;
 }
@@ -188,6 +188,6 @@ int main()
     displayArrayList(ls);
     deleteArrayList(&ls);
     displayArrayList(ls);
-    system("leaks a.out");
+    system("leaks arraylist");
     return (0);
 }

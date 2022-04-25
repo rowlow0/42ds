@@ -4,7 +4,7 @@
 
 PolyLinkedList* createPolyLinkedList()
 {
-    PolyLinkedList *new = malloc(0); // sizeof(PolyLinkedList)
+    PolyLinkedList *new = malloc(sizeof(PolyLinkedList));
     new->count = 0;
     new->head = 0;
     return new;
@@ -26,7 +26,7 @@ void addLLElement(PolyLinkedList *ls, int index, PolyListNode element)
 {
     if(!ls || index > ls->count || index < 0)
         return ;
-    PolyListNode *new = malloc(0); // sizeof(PolyListNode)
+    PolyListNode *new = malloc(sizeof(PolyListNode));
     *new = element;
     if (!ls->count)
     {
@@ -75,7 +75,7 @@ void removeLLElement(PolyLinkedList *ls, int index)
     ls->count--;
     printf("index %d deleted\n", index);
 }
-
+/*
 static void deleteLLElement(PolyListNode **l)
 {
     if (!l)
@@ -88,10 +88,10 @@ static void deleteLLElement(PolyListNode **l)
     }
     *l = 0;
 }
-
+*/
 static PolyListNode* LLEClone(PolyListNode * l) {
 if (l == NULL) return NULL;
-PolyListNode* result = malloc(0); // sizeof(PolyListNode)
+PolyListNode* result = malloc(sizeof(PolyListNode));
 result->data = l->data;
 result->pow = l->pow;
 result->next = LLEClone(l->next);
@@ -161,7 +161,7 @@ void displayPolyLinkedList(PolyLinkedList *ls)
     else
     {
         PolyListNode *tmp = ls->head;
-        for(int i = ls->count;i; tmp = tmp->next, i--)
+        for(int i = 0;i< ls->count; i++,tmp = tmp->next)
         {
             printf("%dx", tmp->data);
             if (i > 1)
@@ -236,7 +236,7 @@ PolyLinkedList *PolyLinkedListMerge(PolyLinkedList *ls, PolyLinkedList *ls2, Pol
         // Dynamically create new node
         if(poly1 || poly2)
         {
-        poly->next = malloc(0);
+        poly->next = malloc(sizeof(PolyListNode));
         poly = poly->next;
         }
         poly->next = NULL;
@@ -255,7 +255,7 @@ PolyLinkedList *PolyLinkedListMerge(PolyLinkedList *ls, PolyLinkedList *ls2, Pol
         }
         if(poly1 || poly2)
         {
-        poly->next = malloc(0);
+        poly->next = malloc(sizeof(PolyListNode));
         poly = poly->next;
         }
         poly->next = NULL;
@@ -268,8 +268,8 @@ void PolyLinkedListSum(PolyLinkedList *ls, PolyLinkedList *ls2, PolyLinkedList *
 {
     if(!ls && !ls2)
         return ;
-    *sum = malloc(0);
-    (*sum)->head = malloc(0);
+    *sum = malloc(sizeof(PolyLinkedList));
+    (*sum)->head = malloc(sizeof(PolyLinkedList));
     PolyLinkedListMerge(PolyLinkedListSort(ls), PolyLinkedListSort(ls2), *sum);
 }
 
@@ -305,6 +305,6 @@ int main()
     deletePolyLinkedList(&sum);
     deletePolyLinkedList(&ls);
     deletePolyLinkedList(&ls2);
-    system("leaks a.out");
+    system("leaks polylinkedlist");
     return 0;
 }

@@ -4,7 +4,7 @@
 
 CircularDoublyList* createCircularDoublyList()
 {
-	CircularDoublyList *new = malloc(0); // sizeof(CircularDoublyList)
+	CircularDoublyList *new = malloc(sizeof(CircularDoublyList));
 	new->count = 0;
 	new->head = 0;
 	printf("create complete\n");
@@ -34,7 +34,7 @@ int addDLElement(CircularDoublyList* ls, int index, CircularDoublyListNode eleme
 {
 	if(ls && index >= 0 && index <= ls->count)
 	{
-		CircularDoublyListNode *new = malloc(17); // sizeof(CircularDoublyListNode)
+		CircularDoublyListNode *new = malloc(sizeof(CircularDoublyListNode));
 		if(!new)
 			return (FALSE);
 		*new = element;
@@ -199,7 +199,7 @@ int main()
 	removeDLElement(ls,3);
 	displayCircularDoublyList(ls);
 	printf("%d\n",getCircularDoublyListLength(ls));
-	CircularDoublyListNode* tmp =getDLElement(ls,0);
+	//CircularDoublyListNode* tmp =getDLElement(ls,0);
 	//clearCircularDoublyList(ls);
 	//displayCircularDoublyList(ls);
 	//for()
@@ -208,6 +208,6 @@ int main()
 	//displayCircularDoublyList(ls);
 	deleteCircularDoublyList(&ls);
 	displayCircularDoublyList(ls);
-	system("leaks a.out");
+	system("leaks circulardoublylist");
 	return 0;
 }
