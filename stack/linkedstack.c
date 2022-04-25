@@ -36,17 +36,22 @@ StackNode* popLS(LinkedStack** pStack)
 {
     if(pStack)
     {
-        StackNode * t = (*pStack)->pTopElement;
-        free((*pStack)->pTopElement->tail);
-        (*pStack)->pTopElement->tail = 0;
-        (*pStack)->currentElementCount--;
-        for(int i = 1; i < (*pStack)->currentElementCount; i++)
-            t = t->pLink;
-        t -> pLink = 0;
-        if((*pStack)->currentElementCount == 0)
+        if((*pStack)->currentElementCount == 1)
+        {
+            free((*pStack)->pTopElement);
             (*pStack)->pTopElement = 0;
+            (*pStack)->currentElementCount--;
+        }
         else
+        {
+            StackNode * t = (*pStack)->pTopElement;
+            free((*pStack)->pTopElement->tail);
+            (*pStack)->currentElementCount--;
+            for(int i = 1; i < (*pStack)->currentElementCount; i++)
+                t = t->pLink;
+            t -> pLink = 0;
             (*pStack)->pTopElement->tail = t;
+        }
     }
     return FALSE;
 }
@@ -65,7 +70,7 @@ void deleteLinkedStack(LinkedStack** pStack)
     {
         StackNode* p = (*pStack)->pTopElement;
         StackNode* t;
-        while(p)
+        while((*pStack)->currentElementCount--)
         {
             t = p;
             p = p->pLink;
@@ -102,9 +107,9 @@ int	checkBracketMatching(LinkedStack* pStack)
     {
         LinkedStack* tStack = createLinkedStack();
         StackNode *character = pStack->pTopElement;
-        while(character)
+        for(int i = 0; i < pStack->currentElementCount; i++)
         {
-            k = character->data; 
+            k = character->data;
             if(strchr("([{", k))
                 pushLS(tStack, *character);
             else if (strchr(")]}", k))
@@ -131,31 +136,28 @@ int	checkBracketMatching(LinkedStack* pStack)
 /*reverse*/
 void reverseLinkedStack(LinkedStack* s)
 {
-    LinkedStack* saver = malloc(sizeof(LinkedStack));
+    LinkedStack* saver = createLinkedStack();
     while(s->currentElementCount)
     {
         StackNode t = *peekLS(s);
         pushLS(saver, t);
         popLS(&s);
     }
-    while(saver->currentElementCount)
+    StackNode t = *(saver->pTopElement); 
+    for(int i = 0; i < saver->currentElementCount; i++)
     {
-        StackNode t = *(saver->pTopElement);
         pushLS(s, t);
-        StackNode *st = saver->pTopElement;
-        saver->pTopElement = saver->pTopElement->pLink;
-        saver->currentElementCount--;
-        free(st);
-
+        if(t.pLink)
+        t = *(t.pLink);
     }
-    free(saver);
+    deleteLinkedStack(&saver);
 }
 
 int main()
 {
     LinkedStack* p = createLinkedStack();
     StackNode el;
-    for(int i = 0; i< 3; i++)
+    for(int i = 0; i< 1; i++)
     {
         el.data= i+48;
         pushLS(p,el);
@@ -186,7 +188,16 @@ int main()
     {
         printf("noo..\n");
     }
+    reverseLinkedStack(p);
+    if(checkBracketMatching(p))
+    {
+        printf("ok!\n");
+    }
+    else
+    {
+        printf("noo..\n");
+    }
     deleteLinkedStack(&p);
-    system("leaks a.out");
+    system("leaks linkedstack");
     return 0;
 }

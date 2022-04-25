@@ -4,7 +4,8 @@ Arr* createArrStack()
 {
     Arr *ls = malloc(sizeof(Arr));
     ls->count = 0;
-    ls->array = malloc(0);
+    ls->size = 64;
+    ls->array = malloc(sizeof(ArrNode) * ls->size);
     return ls;
 }
 
@@ -12,6 +13,11 @@ int pushAR(Arr* arr, ArrNode element)
 {
     if(arr)
     {
+        if (arr->count + 1 == arr->size)
+        {
+            arr->size = arr->size * 3;
+            arr->array = realloc(arr->array, sizeof(ArrNode) * arr->size);
+        }
         arr->array[arr->count++]=element;
         return TRUE;
     }
@@ -24,7 +30,7 @@ ArrNode *popAR(Arr* arr)
     if(arr)
     {
         arr->count--;
-        return TRUE;
+        return FALSE;
     }
     else
         return FALSE;
@@ -82,6 +88,6 @@ int main()
     }
     displayArrayList(s);
     deleteArrStack(&s);
-    system("leaks out");
+    system("leaks a.out");
     return FALSE;
 }

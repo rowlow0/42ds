@@ -12,6 +12,7 @@ typedef struct ArrNodeType
 typedef struct ArrType
 {
 	int count;
+	int size;
     ArrNode *array;
 } Arr;
 
