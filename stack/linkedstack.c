@@ -183,7 +183,7 @@ int main()
         el.data = ch[i];
         pushLS(p,el);
     }
-    if(checkBracketMatching(p) && convertLinkedStack(p))
+    if(checkBracketMatching(p))
         printf("ok!\n");
     else
         printf("noo..\n");
