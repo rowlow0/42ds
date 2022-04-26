@@ -1,5 +1,5 @@
-#ifndef _ARRSTACK_
-#define _ARRSTACK_
+#ifndef _ARRSTACK_H_
+#define _ARRSTACK_H_
 #define MAX_STACK 65532
 #include <stdio.h>
 #include <stdlib.h>

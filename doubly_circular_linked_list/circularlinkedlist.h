@@ -1,5 +1,5 @@
-#ifndef _CIRCULARLINKEDLIST_
-#define _CIRCULARLINKEDLIST_
+#ifndef _CIRCULARLINKEDLIST_H_
+#define _CIRCULARLINKEDLIST_H_
 typedef struct CircularListNodeType
 {
     int data;

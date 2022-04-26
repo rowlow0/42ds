@@ -1,5 +1,5 @@
-#ifndef _LINKEDSTACK_
-#define _LINKEDSTACK_
+#ifndef _LINKEDSTACK_H_
+#define _LINKEDSTACK_H_
 #define MAX_STACK 65532
 #include <stdio.h>
 #include <stdlib.h>

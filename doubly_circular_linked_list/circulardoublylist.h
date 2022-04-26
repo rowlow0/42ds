@@ -1,5 +1,5 @@
-#ifndef _CIRCULARDOUBLYLIST_
-#define _CIRCULARDOUBLYLIST_
+#ifndef _CIRCULARDOUBLYLIST_H_
+#define _CIRCULARDOUBLYLIST_H_
 
 typedef struct CircularDoublyListNodeType
 {

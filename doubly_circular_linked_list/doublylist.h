@@ -1,5 +1,5 @@
-#ifndef _DOUBLYLIST_
-#define _DOUBLYLIST_
+#ifndef _DOUBLYLIST_H_
+#define _DOUBLYLIST_H_
 
 typedef struct DoublyListNodeType
 {

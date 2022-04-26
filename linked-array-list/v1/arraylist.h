@@ -1,5 +1,5 @@
-#ifndef _ARRAYLIST_
-#define _ARRAYLIST_
+#ifndef _ARRAYLIST_H_
+#define _ARRAYLIST_H_
 typedef struct ArrayListNodeType
 {
     int data;

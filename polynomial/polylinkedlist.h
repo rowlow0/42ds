@@ -1,5 +1,5 @@
-#ifndef _POLYLINKEDLIST_
-#define _POLYLINKEDLIST_
+#ifndef _POLYLINKEDLIST_H_
+#define _POLYLINKEDLIST_H_
 
 typedef struct PolyListNodeType
 {
