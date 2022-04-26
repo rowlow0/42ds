@@ -110,17 +110,26 @@ int	checkBracketMatching(LinkedStack* pStack)
         for(int i = 0; i < pStack->currentElementCount; i++)
         {
             k = character->data;
+            c = peekLS(tStack) ? peekLS(tStack)->data : -1;
             if(strchr("([{", k))
-                pushLS(tStack, *character);
+            {
+                if(c == '(' && strchr("[{", k) || c == '[' && strchr("{", k))
+                {
+                    result = FALSE;
+                    break;
+                }
+                else
+                    pushLS(tStack, *character);
+            }
             else if (strchr(")]}", k))
             {
-                c = peekLS(tStack) ? peekLS(tStack)->data : -1;
                 if((k == ')' && c != '(') || (k == ']' && c != '[') || (k == '}' && c != '{'))
                 {
                     result = FALSE;
                     break;
                 }
-                popLS(&tStack);
+                else
+                    popLS(&tStack);
             }
                 character = character->pLink;
         }
@@ -157,6 +166,9 @@ int main()
 {
     LinkedStack* p = createLinkedStack();
     StackNode el;
+    char s[] = "(5+4)*2";
+    char s2[] = "( ( 4 * 2 ) / 2 ) - { ( 3 + 3 ) && ( 3 – 4 ) }";
+    char s3[] = "( ( 4 * 7 ) / 4 - { ( 6 + 7 ) && ( 5 – 1 ) ) }";
     for(int i = 0; i< 1; i++)
     {
         el.data= i+48;
@@ -165,38 +177,21 @@ int main()
     reverseLinkedStack(p);
     deleteLinkedStack(&p);
     p = createLinkedStack();
-    el.data = '(';
-    pushLS(p, el);
-    el.data = '5';
-    pushLS(p, el);
-    el.data = '+';
-    pushLS(p, el);
-    el.data = '4';
-    pushLS(p, el);
-    el.data = ')';
-    pushLS(p, el);
-    //pushLS(p, el);
-    el.data = '*';
-    pushLS(p, el);
-    el.data = '2';
-    pushLS(p, el);
-    if(checkBracketMatching(p))
+    char *ch = s3;
+    for (int i = 0; i < strlen(ch); i++)
     {
+        el.data = ch[i];
+        pushLS(p,el);
+    }
+    if(checkBracketMatching(p) && convertLinkedStack(p))
         printf("ok!\n");
-    }
     else
-    {
         printf("noo..\n");
-    }
     reverseLinkedStack(p);
     if(checkBracketMatching(p))
-    {
         printf("ok!\n");
-    }
     else
-    {
         printf("noo..\n");
-    }
     deleteLinkedStack(&p);
     system("leaks linkedstack");
     return 0;
