@@ -10,7 +10,7 @@ LinkedStack* createLinkedStack()
 
 int pushLS(LinkedStack* ls, StackNode el)
 {
-    if(ls)
+    if(ls && el.data != ' ')
     {
         StackNode *tmp = ls->pTopElement;
         if(tmp)
@@ -18,12 +18,14 @@ int pushLS(LinkedStack* ls, StackNode el)
             tmp->tail->pLink = malloc(sizeof(StackNode));
             *(tmp->tail->pLink) = el;
             tmp->tail = tmp->tail->pLink;
+            ls->pTopElement->tail->pLink = 0;
         }
         else if(!tmp)
         {
             ls->pTopElement = malloc(sizeof(StackNode));
             *(ls->pTopElement) = el;
             ls->pTopElement->tail = ls->pTopElement;
+            ls->pTopElement->tail->pLink = 0;
         }
         ls->currentElementCount++;
         return TRUE;
@@ -162,13 +164,124 @@ void reverseLinkedStack(LinkedStack* s)
     deleteLinkedStack(&saver);
 }
 
+int is_alphabet(int c)
+{
+    return (c <= 'Z' && c>= 'A');
+}
+
+int is_arithmetic(int c)
+{
+    char    cc = c;
+    return (cc == '-' || cc == '/' || cc == '*' || cc == '+');
+}
+
+int is_infix(LinkedStack *p)
+{
+    StackNode *t = p->pTopElement;
+    int i = 0;
+    int f = 0;
+    while (i < p->currentElementCount)
+    {
+        if (is_alphabet(t->data))
+            f++;
+        if (is_arithmetic(t->data))
+            f--;
+        if (f > 1 || f < 0)
+            return 0;
+        t = t->pLink;
+        i++;
+    }
+    return 1;
+}
+
+void display(LinkedStack *p)
+{
+    int  i= 0;
+    StackNode *t = p->pTopElement;
+    while (i < p->currentElementCount)
+    {
+        printf("%c",t->data);
+        t = t->pLink;
+        i++;
+    }
+}
+
+void    infix_to_postfix(LinkedStack *p)
+{
+    LinkedStack *main = createLinkedStack();
+    LinkedStack *arith = createLinkedStack();
+    int i = 0;
+    StackNode *t= p->pTopElement;
+    while (i <p->currentElementCount)
+    {
+        if (is_alphabet(t->data))
+            pushLS(main, *t);
+        else if (is_arithmetic(t->data))
+            pushLS(arith, *t);
+        else if (t->data == '(')
+        {
+            i++;
+            t = t->pLink;
+            int count = arith->currentElementCount;
+            while (t->data != ')')
+            {
+                if(is_alphabet(t->data))
+                    pushLS(main, *t);
+                else if(is_arithmetic(t->data))
+                    pushLS(arith, *t);
+                i++;
+                t = t->pLink;
+            }
+            while(arith->currentElementCount > count)
+            {
+                pushLS(main, *peekLS(arith));
+                popLS(&arith);
+            }
+        }
+        t = t->pLink;
+        i++;
+    }
+    display(main);
+    display(arith);
+    printf("\n");
+    deleteLinkedStack(&main);
+    deleteLinkedStack(&arith);
+}
+
+void    doing_job(char *s)
+{
+    StackNode el;
+    LinkedStack* p = createLinkedStack();
+    for (int i = 0; i < strlen(s); i++)
+    {
+        el.data = *(s + i);
+        pushLS(p,el);
+    }
+    if(checkBracketMatching(p))
+    {
+        printf("checkBracketMatching : ok\n");
+        if(is_infix(p))
+        {
+            printf("is_infix\n");
+            infix_to_postfix(p);
+        }
+    }
+    else
+        printf("checkBracketMatching : noo..\n");
+    reverseLinkedStack(p);
+    if(checkBracketMatching(p))
+        printf("checkBracketMatching : ok\n");
+    else
+        printf("checkBracketMatching : noo..\n");
+    deleteLinkedStack(&p);
+
+}
+
 int main()
 {
     LinkedStack* p = createLinkedStack();
     StackNode el;
-    char s[] = "(5+4)*2";
-    char s2[] = "( ( 4 * 2 ) / 2 ) - { ( 3 + 3 ) && ( 3 – 4 ) }";
-    char s3[] = "( ( 4 * 7 ) / 4 - { ( 6 + 7 ) && ( 5 – 1 ) ) }";
+    char *s[] = {"A*B","A*B+C","A +B * C", "A * (B + C )", 0}; //"(5+4)*2","( ( 4 * 2 ) / 2 ) - { ( 3 + 3 ) && ( 3 – 4 ) }","( ( 4 * 7 ) / 4 - { ( 6 + 7 ) && ( 5 – 1 ) ) }"
     for(int i = 0; i< 1; i++)
     {
         el.data= i+48;
@@ -176,23 +289,12 @@ int main()
     }
     reverseLinkedStack(p);
     deleteLinkedStack(&p);
-    p = createLinkedStack();
-    char *ch = s3;
-    for (int i = 0; i < strlen(ch); i++)
+    int i = 0;
+    while (s[i])
     {
-        el.data = ch[i];
-        pushLS(p,el);
+        doing_job(s[i]);
+        i++;
     }
-    if(checkBracketMatching(p))
-        printf("ok!\n");
-    else
-        printf("noo..\n");
-    reverseLinkedStack(p);
-    if(checkBracketMatching(p))
-        printf("ok!\n");
-    else
-        printf("noo..\n");
-    deleteLinkedStack(&p);
-    system("leaks linkedstack");
+    //system("leaks a.out");
     return 0;
 }
