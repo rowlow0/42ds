@@ -154,7 +154,7 @@ void reverseLinkedStack(LinkedStack* s)
         pushLS(saver, t);
         popLS(&s);
     }
-    StackNode t = *(saver->pTopElement); 
+    StackNode t = *(saver->pTopElement);
     for(int i = 0; i < saver->currentElementCount; i++)
     {
         pushLS(s, t);
@@ -248,7 +248,7 @@ void    infix_to_postfix(LinkedStack *p)
     deleteLinkedStack(&arith);
 }
 
-void    doing_job(char *s)
+void    fake_job(char *s)
 {
     StackNode el;
     LinkedStack* p = createLinkedStack();
@@ -274,7 +274,43 @@ void    doing_job(char *s)
     else
         printf("checkBracketMatching : noo..\n");
     deleteLinkedStack(&p);
+}
 
+void    do_math(LinkedStack *p)
+{
+    StackNode *s = p->pTopElement;
+    int sum = 0;
+    int i= 0;
+    while(i < p->pTopElement)
+    {
+
+        i++;
+    }
+    printf("sum is %d\n", sum);
+}
+
+int is_infix2(LinkedStack *p)
+{
+    
+}
+
+void    doing_job(char *s)
+{
+    StackNode el;
+    LinkedStack* p = createLinkedStack();
+    size_t len = strlen(s);
+    for (size_t i = 0; i < len; i++)
+    {
+        el.data = *(s + i);
+        pushLS(p,el);
+    }
+    if(is_infix2(p))
+    {
+        do_math(p);
+    }
+    else
+        printf("is_infix2 : noo..\n");
+    deleteLinkedStack(&p);
 }
 
 int main()
@@ -282,6 +318,7 @@ int main()
     LinkedStack* p = createLinkedStack();
     StackNode el;
     char *s[] = {"A*B","A*B+C","A +B * C", "A * (B + C )", 0}; //"(5+4)*2","( ( 4 * 2 ) / 2 ) - { ( 3 + 3 ) && ( 3 – 4 ) }","( ( 4 * 7 ) / 4 - { ( 6 + 7 ) && ( 5 – 1 ) ) }"
+    char *s2[] = {"123*1","1*2+3","1 +2 * 3", "1 * (2 + 3 )", 0};
     for(int i = 0; i< 1; i++)
     {
         el.data= i+48;
@@ -292,9 +329,15 @@ int main()
     int i = 0;
     while (s[i])
     {
+        fake_job(s[i]);
+        i++;
+    }
+    i = 0;
+    while (s[i])
+    {
         doing_job(s[i]);
         i++;
     }
-    //system("leaks a.out");
+    system("leaks a.out");
     return 0;
 }

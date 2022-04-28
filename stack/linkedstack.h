@@ -7,8 +7,8 @@
 typedef struct StackNodeType
 {
 	char data;
-	struct StackNodeType* pLink;
-	struct StackNodeType *tail;
+	struct StackNodeType*	pLink;
+	struct StackNodeType*	tail;
 } StackNode;
 
 typedef struct LinkedStackType
