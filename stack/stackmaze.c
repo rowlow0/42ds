@@ -103,8 +103,7 @@ int isMageStackEmpty(MageStack* pStack)
 
 int found(int maze[FX][FY])
 {
-	int visited[FX][FY];
-	memset(visited, TRUE, sizeof(visited));
+	int visited[FX][FY] = { 0,};
 	MageStack *m = createMageStack();
 	StackNode t;
 	StackNode q;
@@ -117,12 +116,13 @@ int found(int maze[FX][FY])
 	while(!isMageStackEmpty(m))
 	{
 		t = *peekLS(m);
+		visited[t.x][t.y] = TRUE;
 		if (t.x == FX -1 && t.y == FY - 1)
 			return TRUE;
 		if (t.dir == 1)
 		{
 			m->pTopElement->tail->dir++;
-			if(t.x -1 >=0 && maze[t.x - 1][t.y] && visited[t.x-1][t.y])
+			if(t.x -1 >=0 && maze[t.x - 1][t.y] && !visited[t.x-1][t.y])
 			{
 				q.x = t.x -1;
 				q.y = t.y;
@@ -135,7 +135,7 @@ int found(int maze[FX][FY])
 		else if (t.dir == 2)
 		{
 			m->pTopElement->tail->dir++;
-			if(t.y + 1 < FY && maze[t.x][t.y+1] && visited[t.x][t.y+1])
+			if(t.y + 1 < FY && maze[t.x][t.y+1] && !visited[t.x][t.y+1])
 			{
 				q.x = t.x;
 				q.y = t.y+1;
@@ -148,7 +148,7 @@ int found(int maze[FX][FY])
 		else if (t.dir == 3)
 		{
 			m->pTopElement->tail->dir++;
-			if(t.x + 1 < FY && maze[t.x +1][t.y] && visited[t.x + 1][t.y])
+			if(t.x + 1 < FY && maze[t.x +1][t.y] && !visited[t.x + 1][t.y])
 			{
 				q.x = t.x+1;
 				q.y = t.y;
@@ -161,7 +161,7 @@ int found(int maze[FX][FY])
 		else if (t.dir == 4)
 		{
 			m->pTopElement->tail->dir++;
-			if(t.y -1 >=0 && maze[t.x][t.y-1] && visited[t.x][t.y-1])
+			if(t.y -1 >=0 && maze[t.x][t.y-1] && !visited[t.x][t.y-1])
 			{
 				q.x = t.x;
 				q.y = t.y -1;
@@ -173,7 +173,6 @@ int found(int maze[FX][FY])
 		}
 		else
 		{
-			visited[t.x][t.y] = FALSE;
 			popLS(&m);
 		}
 	}
