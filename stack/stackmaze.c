@@ -1,6 +1,6 @@
 #include "stackmaze.h"
-#define FX 5
-#define FY 5
+#define FX 10
+#define FY 10
 MageStack* createMageStack()
 {
     MageStack *new = malloc(sizeof(MageStack));
@@ -302,32 +302,40 @@ saver	*min_found(int maze[FX][FY], MageStack	**m)
 int main()
 {
 	 int maze[FX][FY] = {
-		{1, 1, 1, 1, 1},
-        {0, 0, 0, 0, 1},
-        {0, 0, 0, 0, 1},
-        {0, 0, 0, 0, 1},
-		{0, 0, 0, 0, 1}
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        {1, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+        {1, 0, 0, 0, 0, 0, 0, 0, 1, 0},
+		{1, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+		{1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
     };
 	MageStack	*t = found(maze);
 	if (t)
 	{
 		saver	*m = min_found(maze, &t);
+		int b = 0;
 		printf("path found!\n");
 		if (m)
 		{
 			for(int i = 0; i < m->count;i++)
 			{
-			printf("%d ",m->arr[i].x);
-			printf("%d\n",m->arr[i].y);
+			printf("%d",m->arr[i].x);
+			printf("%d ",m->arr[i].y);
 			}
+			printf("\n");
 			printf("min path found\n");
 			for(int w = 0; w <FX; w++)
 			{
 				for(int q = 0; q< FY; q++)
 				{
-					if (m->arr[w].x == w && m->arr[q].y == q)
+					if (m->arr[b].x == w && m->arr[b].y == q)
 					{
 						printf("1 ");
+						b++;
 					}
 					else
 					{
