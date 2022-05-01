@@ -1,6 +1,6 @@
 #include "stackmaze.h"
-#define FX 4
-#define FY 5
+#define FX 10
+#define FY 10
 MageStack* createMageStack()
 {
     MageStack *new = malloc(sizeof(MageStack));
@@ -101,7 +101,7 @@ int isMageStackEmpty(MageStack* pStack)
         return FALSE;
 }
 
-int found(int maze[FX][FY])
+MageStack	*found(int maze[FX][FY])
 {
 	int visited[FX][FY] = { 0,};
 	MageStack *m = createMageStack();
@@ -118,7 +118,9 @@ int found(int maze[FX][FY])
 		t = *peekLS(m);
 		visited[t.x][t.y] = TRUE;
 		if (t.x == FX -1 && t.y == FY - 1)
-			return TRUE;
+		{
+			return m;
+		}
 		if (t.dir == 1)
 		{
 			m->pTopElement->tail->dir++;
@@ -179,16 +181,137 @@ int found(int maze[FX][FY])
 	return FALSE;
 }
 
+MageStack *getLLElement(MageStack *ls) // for deep copy
+{
+    if(!ls)
+        return 0;
+    MageStack *tmp = createMageStack();
+	tmp->pTopElement = malloc(sizeof(StackNode));
+	tmp->pTopElement = ls->pTopElement;
+	StackNode *tmp2 = tmp->pTopElement->pLink;
+	StackNode *ls2= ls->pTopElement->pLink;
+	int i = 0;
+	while(i++ < ls->currentElementCount)
+	{
+		tmp2 = malloc(sizeof(StackNode));
+		tmp2->dir = ls2->dir;
+		tmp2->x = ls2->x;
+		tmp2->y = ls2->y;
+		tmp2->tail = ls2->tail;
+		tmp2 = tmp2->pLink;
+		ls2 = ls2->pLink;
+	}
+    return tmp;
+}
+
+
+MageStack	*min_found(int maze[FX][FY], MageStack	*m)
+{
+	int visited[FX][FY] = { 0,};
+	MageStack *r = getLLElement(m);
+	int	count = m->currentElementCount;
+	StackNode t;
+	StackNode q;
+	t.x=0;
+	t.y=0;
+	t.tail=0;
+	t.pLink=0;
+	t.dir=1;
+	while(!isMageStackEmpty(m))
+	{
+		t = *peekLS(m);
+		visited[t.x][t.y] = TRUE;
+		if (t.x == FX -1 && t.y == FY - 1 && count > m->currentElementCount)
+		{
+			deleteMageStack(&r);
+			r = getLLElement(m);
+			count = m->currentElementCount;
+		}
+		if (t.dir == 1)
+		{
+			m->pTopElement->tail->dir++;
+			if(t.x -1 >=0 && maze[t.x - 1][t.y] && !visited[t.x-1][t.y])
+			{
+				q.x = t.x -1;
+				q.y = t.y;
+				q.tail=0;
+				q.pLink=0;
+				q.dir=1;
+				pushLS(m, q);
+			}
+		}
+		else if (t.dir == 2)
+		{
+			m->pTopElement->tail->dir++;
+			if(t.y + 1 < FY && maze[t.x][t.y+1] && !visited[t.x][t.y+1])
+			{
+				q.x = t.x;
+				q.y = t.y+1;
+				q.tail = 0;
+				q.pLink = 0;
+				q.dir = 1;
+				pushLS(m, q);
+			}
+		}
+		else if (t.dir == 3)
+		{
+			m->pTopElement->tail->dir++;
+			if(t.x + 1 < FY && maze[t.x +1][t.y] && !visited[t.x + 1][t.y])
+			{
+				q.x = t.x+1;
+				q.y = t.y;
+				q.tail=0;
+				q.pLink=0;
+				q.dir=1;
+				pushLS(m, q);
+			}
+		}
+		else if (t.dir == 4)
+		{
+			m->pTopElement->tail->dir++;
+			if(t.y -1 >=0 && maze[t.x][t.y-1] && !visited[t.x][t.y-1])
+			{
+				q.x = t.x;
+				q.y = t.y -1;
+				q.tail=0;
+				q.pLink=0;
+				q.dir=1;
+				pushLS(m, q);
+			}
+		}
+		else
+		{
+			popLS(&m);
+		}
+	}
+	return r;
+}
+
 int main()
 {
 	 int maze[FX][FY] = {
-        {1, 1, 1, 1, 0},
-        {1, 1, 1, 0, 1},
-        {0, 1, 0, 1, 1},
-        {1, 1, 1, 1, 1}
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        {1, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+        {1, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+        {1, 0, 0, 0, 0, 0, 0, 0, 1, 0},
+		{1, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+		{1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+		{1, 0, 0, 0, 0, 0, 0, 0, 1, 0},
+		{1, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
     };
-	if (found(maze))
+	MageStack	*t = found(maze);
+	if (t)
+	{
+		MageStack	*m;
 		printf("path found!\n");
+		m = min_found(maze, t);
+		if (m)
+		{
+			printf("min path found\n");
+		}
+	}
 	else
 		printf("no path found!\n");
 	return 0;
