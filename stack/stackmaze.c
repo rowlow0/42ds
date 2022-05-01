@@ -191,7 +191,8 @@ MageStack *getLLElement(MageStack *ls) // for deep copy
 	StackNode *tmp2 = tmp->pTopElement->pLink;
 	StackNode *ls2= ls->pTopElement->pLink;
 	int i = 0;
-	while(i++ < ls->currentElementCount)
+	tmp->currentElementCount = ls->currentElementCount;
+	while(++i < ls->currentElementCount)
 	{
 		tmp2 = malloc(sizeof(StackNode));
 		tmp2->dir = ls2->dir;
@@ -201,6 +202,7 @@ MageStack *getLLElement(MageStack *ls) // for deep copy
 		tmp2 = tmp2->pLink;
 		ls2 = ls2->pLink;
 	}
+	tmp2 = 0;
     return tmp;
 }
 
@@ -310,6 +312,21 @@ int main()
 		if (m)
 		{
 			printf("min path found\n");
+			for(int x = 0; x <FX; x++)
+			{
+				StackNode *t = m->pTopElement;
+				for(int y = 0; y< FY; y++)
+				{
+					if (t->x == x && t->y == y)
+					{
+						printf("1 ");
+						t = t->pLink;
+					}
+					else
+						printf("2 ");
+				}
+				printf("\n");
+			}
 		}
 	}
 	else
