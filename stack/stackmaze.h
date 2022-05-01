@@ -9,7 +9,7 @@ typedef struct StackNodeType
 	int x;
 	int y;
 	int	dir;
-	struct StackNodeType* pLink;
+	struct StackNodeType *pLink;
 	struct StackNodeType *tail;
 } StackNode;
 
@@ -18,6 +18,18 @@ typedef struct MageStackType
 	int currentElementCount;
 	StackNode* pTopElement;
 } MageStack;
+
+typedef struct SaverNode
+{
+	int	x;
+	int	y;
+}	saverNode;
+
+typedef struct Saver
+{
+	int	count;
+	saverNode *arr;
+}	saver;
 
 MageStack* createMageStack();
 void reverseMageStack(MageStack*);
@@ -28,6 +40,8 @@ void deleteMageStack(MageStack** pStack);
 int isMageStackFull(MageStack* pStack);
 int isMageStackEmpty(MageStack* pStack);
 int	checkBracketMatching(MageStack*);
+
+
 
 
 #endif
