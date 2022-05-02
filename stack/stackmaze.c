@@ -117,69 +117,61 @@ MageStack	*found(int maze[FX][FY])
 		{
 			return m;
 		}
-		if (t.dir == 1)
+		else if (t.dir == 1 && t.x -1 >=0 && maze[t.x - 1][t.y] && !m->visited[t.x][t.y][t.dir - 1])
 		{
-			m->pTopElement->tail->dir++;
-			if(t.x -1 >=0 && maze[t.x - 1][t.y] && !m->visited[t.x][t.y][t.dir - 2])
-			{
 				q.x = t.x -1;
 				q.y = t.y;
 				q.tail=0;
 				q.pLink=0;
 				q.dir=1;
-				m->visited[t.x][t.y][t.dir - 2] = TRUE;
+				m->visited[t.x][t.y][t.dir - 1] = TRUE;
 				m->visited[t.x - 1][t.y][2] = TRUE;
 				pushLS(m, q);
-			}
 		}
-		else if (t.dir == 2)
+		else if (t.dir == 2 && t.y + 1 < FY && maze[t.x][t.y+1] && !m->visited[t.x][t.y][t.dir - 1])
 		{
-			m->pTopElement->tail->dir++;
-			if(t.y + 1 < FY && maze[t.x][t.y+1] && !m->visited[t.x][t.y][t.dir - 2])
-			{
 				q.x = t.x;
 				q.y = t.y+1;
 				q.tail = 0;
 				q.pLink = 0;
 				q.dir = 1;
-				m->visited[t.x][t.y][t.dir - 2] = TRUE;
+				m->visited[t.x][t.y][t.dir - 1] = TRUE;
 				m->visited[t.x][t.y+1][3] = TRUE;
 				pushLS(m, q);
-			}
 		}
-		else if (t.dir == 3)
+		else if (t.dir == 3 && t.x + 1 < FX && maze[t.x +1][t.y] && !m->visited[t.x][t.y][t.dir - 1])
 		{
-			m->pTopElement->tail->dir++;
-			if(t.x + 1 < FY && maze[t.x +1][t.y] && !m->visited[t.x][t.y][t.dir - 2])
-			{
 				q.x = t.x+1;
 				q.y = t.y;
 				q.tail=0;
 				q.pLink=0;
 				q.dir=1;
-				m->visited[t.x][t.y][t.dir - 2] = TRUE;
+				m->visited[t.x][t.y][t.dir - 1] = TRUE;
 				m->visited[t.x+1][t.y][0] = TRUE;
 				pushLS(m, q);
-			}
 		}
-		else if (t.dir == 4)
+		else if (t.dir == 4 && t.y -1 >=0 && maze[t.x][t.y-1] && !m->visited[t.x][t.y][t.dir - 1])
 		{
-			m->pTopElement->tail->dir++;
-			if(t.y -1 >=0 && maze[t.x][t.y-1] && !m->visited[t.x][t.y][t.dir - 2])
-			{
 				q.x = t.x;
 				q.y = t.y -1;
 				q.tail=0;
 				q.pLink=0;
 				q.dir=1;
-				m->visited[t.x][t.y][t.dir - 2] = TRUE;
+				m->visited[t.x][t.y][t.dir - 1] = TRUE;
 				m->visited[t.x][t.y-1][1] = TRUE;
 				pushLS(m, q);
-			}
+		}
+		else if (t.dir >= 5 || (m->currentElementCount > 1 && t.x == 0 && t.y == 0))
+		{
+			m->visited[t.x][t.y][0] = FALSE;
+			m->visited[t.x][t.y][1] = FALSE;
+			m->visited[t.x][t.y][2] = FALSE;
+			m->visited[t.x][t.y][3] = FALSE;
+			popLS(&m);
 		}
 		else
 		{
-			popLS(&m);
+			m->pTopElement->tail->dir++;
 		}
 	}
 	return FALSE;
@@ -222,71 +214,77 @@ saver	*min_found(int maze[FX][FY], MageStack	**m)
 	while(!isMageStackEmpty(*m))
 	{
 		t = *peekLS(*m);
-		
 		if (count < (*m)->currentElementCount)
+		{
+			(*m)->visited[t.x][t.y][0] = FALSE;
+			(*m)->visited[t.x][t.y][1] = FALSE;
+			(*m)->visited[t.x][t.y][2] = FALSE;
+			(*m)->visited[t.x][t.y][3] = FALSE;
 			popLS(m);
+		}
 		else if (t.x == FX -1 && t.y == FY - 1 && count > (*m)->currentElementCount)
 		{
 			delete_save(&r);
 			r = save(*m);
 			count = (*m)->currentElementCount;
 		}
-		else if (t.dir == 1)
+		else if (t.dir == 1 && t.x -1 >=0 && maze[t.x - 1][t.y] && !(*m)->visited[t.x][t.y][t.dir-1])
 		{
-			(*m)->pTopElement->tail->dir++;
-			if(t.x -1 >=0 && maze[t.x - 1][t.y] && !(*m)->visited[t.x -1][t.y])
-			{
 				q.x = t.x -1;
 				q.y = t.y;
 				q.tail=0;
 				q.pLink=0;
 				q.dir=1;
+				(*m)->visited[t.x][t.y][t.dir - 1] = TRUE;
+				(*m)->visited[t.x - 1][t.y][2] = TRUE;
 				pushLS(*m, q);
-			}
 		}
-		else if (t.dir == 2)
+		else if (t.dir == 2 && t.y + 1 < FY && maze[t.x][t.y+1] && !(*m)->visited[t.x][t.y][t.dir-1])
 		{
-			(*m)->pTopElement->tail->dir++;
-			if(t.y + 1 < FY && maze[t.x][t.y+1] && !(*m)->visited[t.x][t.y + 1])
-			{
-				q.x = t.x;
-				q.y = t.y+1;
-				q.tail = 0;
-				q.pLink = 0;
-				q.dir = 1;
-				pushLS(*m, q);
-			}
+			q.x = t.x;
+			q.y = t.y+1;
+			q.tail = 0;
+			q.pLink = 0;
+			q.dir = 1;
+			(*m)->visited[t.x][t.y][t.dir - 1] = TRUE;
+			(*m)->visited[t.x][t.y+1][3] = TRUE;
+			pushLS(*m, q);
 		}
-		else if (t.dir == 3)
+		else if (t.dir == 3 && t.x + 1 < FX && maze[t.x +1][t.y] && !(*m)->visited[t.x][t.y][t.dir-1])
 		{
-			(*m)->pTopElement->tail->dir++;
-			if(t.x + 1 < FY && maze[t.x +1][t.y] && !(*m)->visited[t.x+1][t.y])
-			{
-				q.x = t.x+1;
-				q.y = t.y;
-				q.tail=0;
-				q.pLink=0;
-				q.dir=1;
-				pushLS(*m, q);
-			}
+			q.x = t.x+1;
+			q.y = t.y;
+			q.tail=0;
+			q.pLink=0;
+			q.dir=1;
+			(*m)->visited[t.x][t.y][t.dir - 1] = TRUE;
+			(*m)->visited[t.x+1][t.y][0] = TRUE;
+			pushLS(*m, q);
 		}
-		else if (t.dir == 4)
+		else if (t.dir == 4 && t.y -1 >=0 && maze[t.x][t.y-1] && !(*m)->visited[t.x][t.y][t.dir-1])
 		{
-			(*m)->pTopElement->tail->dir++;
-			if(t.y -1 >=0 && maze[t.x][t.y-1] && !(*m)->visited[t.x][t.y-1])
-			{
-				q.x = t.x;
-				q.y = t.y -1;
-				q.tail=0;
-				q.pLink=0;
-				q.dir=1;
-				pushLS(*m, q);
-			}
+			q.x = t.x;
+			q.y = t.y -1;
+			q.tail=0;
+			q.pLink=0;
+			q.dir=1;
+			(*m)->visited[t.x][t.y][t.dir - 1] = TRUE;
+			(*m)->visited[t.x][t.y-1][1] = TRUE;
+			pushLS(*m, q);
+		}
+		else if (t.dir >= 5 || ((*m)->currentElementCount > 1 && t.x == 0 && t.y == 0))
+		{
+			(*m)->visited[t.x][t.y][0] = FALSE;
+			(*m)->visited[t.x][t.y][1] = FALSE;
+			(*m)->visited[t.x][t.y][2] = FALSE;
+			(*m)->visited[t.x][t.y][3] = FALSE;
+			popLS(m);
 		}
 		else
 		{
-			popLS(m);
+			(*m)->pTopElement->tail->dir++;
 		}
+		//printf("%d %d %d\n",t.x,t.y,t.dir);
 	}
 	deleteMageStack(m);
 	return r;
@@ -304,15 +302,9 @@ saver	*min_found(int maze[FX][FY], MageStack	**m)
 		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 */
 /*
-		{1, 1, 1, 1, 1},
-        {1, 0, 0, 0, 1},
-        {1, 0, 1, 1, 1},
-        {1, 0, 1, 0, 0},
-		{1, 1, 1, 1, 1}
+
 */
-int main()
-{
-	 int maze[FX][FY] = {
+/*
 	 	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
         {1, 0, 0, 0, 1, 0, 0, 0, 0, 1},
         {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
@@ -322,7 +314,17 @@ int main()
 		{1, 0, 0, 0, 0, 0, 0, 1, 1, 1},
 		{1, 0, 0, 0, 0, 0, 0, 1, 0, 0},
 		{1, 0, 0, 0, 0, 0, 0, 1, 0, 0},
-		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1} };
+		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+*/
+int main()
+{
+	 int maze[FX][FY] = {
+		{1, 1, 1, 1, 1},
+        {1, 0, 1, 1, 0},
+        {1, 0, 0, 0, 0},
+        {1, 0, 0, 0, 0},
+		{1, 1, 1, 1, 1}
+		};
 	MageStack	*t = found(maze);
 	if (t)
 	{
