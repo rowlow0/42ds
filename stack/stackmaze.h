@@ -4,6 +4,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#define FX 10
+#define FY 10
+#define FF 4
 typedef struct StackNodeType
 {
 	int x;
@@ -15,6 +18,7 @@ typedef struct StackNodeType
 
 typedef struct MageStackType
 {
+	int visited[FX][FY][FF];
 	int currentElementCount;
 	StackNode* pTopElement;
 } MageStack;

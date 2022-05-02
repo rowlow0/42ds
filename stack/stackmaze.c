@@ -1,6 +1,4 @@
 #include "stackmaze.h"
-#define FX 10
-#define FY 10
 MageStack* createMageStack()
 {
     MageStack *new = malloc(sizeof(MageStack));
@@ -103,7 +101,6 @@ int isMageStackEmpty(MageStack* pStack)
 
 MageStack	*found(int maze[FX][FY])
 {
-	int visited[FX][FY] = { 0,};
 	MageStack *m = createMageStack();
 	StackNode t;
 	StackNode q;
@@ -116,7 +113,6 @@ MageStack	*found(int maze[FX][FY])
 	while(!isMageStackEmpty(m))
 	{
 		t = *peekLS(m);
-		visited[t.x][t.y] = TRUE;
 		if (t.x == FX -1 && t.y == FY - 1)
 		{
 			return m;
@@ -124,52 +120,60 @@ MageStack	*found(int maze[FX][FY])
 		if (t.dir == 1)
 		{
 			m->pTopElement->tail->dir++;
-			if(t.x -1 >=0 && maze[t.x - 1][t.y] && !visited[t.x-1][t.y])
+			if(t.x -1 >=0 && maze[t.x - 1][t.y] && !m->visited[t.x][t.y][t.dir - 2])
 			{
 				q.x = t.x -1;
 				q.y = t.y;
 				q.tail=0;
 				q.pLink=0;
 				q.dir=1;
+				m->visited[t.x][t.y][t.dir - 2] = TRUE;
+				m->visited[t.x - 1][t.y][2] = TRUE;
 				pushLS(m, q);
 			}
 		}
 		else if (t.dir == 2)
 		{
 			m->pTopElement->tail->dir++;
-			if(t.y + 1 < FY && maze[t.x][t.y+1] && !visited[t.x][t.y+1])
+			if(t.y + 1 < FY && maze[t.x][t.y+1] && !m->visited[t.x][t.y][t.dir - 2])
 			{
 				q.x = t.x;
 				q.y = t.y+1;
 				q.tail = 0;
 				q.pLink = 0;
 				q.dir = 1;
+				m->visited[t.x][t.y][t.dir - 2] = TRUE;
+				m->visited[t.x][t.y+1][3] = TRUE;
 				pushLS(m, q);
 			}
 		}
 		else if (t.dir == 3)
 		{
 			m->pTopElement->tail->dir++;
-			if(t.x + 1 < FY && maze[t.x +1][t.y] && !visited[t.x + 1][t.y])
+			if(t.x + 1 < FY && maze[t.x +1][t.y] && !m->visited[t.x][t.y][t.dir - 2])
 			{
 				q.x = t.x+1;
 				q.y = t.y;
 				q.tail=0;
 				q.pLink=0;
 				q.dir=1;
+				m->visited[t.x][t.y][t.dir - 2] = TRUE;
+				m->visited[t.x+1][t.y][0] = TRUE;
 				pushLS(m, q);
 			}
 		}
 		else if (t.dir == 4)
 		{
 			m->pTopElement->tail->dir++;
-			if(t.y -1 >=0 && maze[t.x][t.y-1] && !visited[t.x][t.y-1])
+			if(t.y -1 >=0 && maze[t.x][t.y-1] && !m->visited[t.x][t.y][t.dir - 2])
 			{
 				q.x = t.x;
 				q.y = t.y -1;
 				q.tail=0;
 				q.pLink=0;
 				q.dir=1;
+				m->visited[t.x][t.y][t.dir - 2] = TRUE;
+				m->visited[t.x][t.y-1][1] = TRUE;
 				pushLS(m, q);
 			}
 		}
@@ -204,10 +208,8 @@ saver	*save(MageStack *ls) // save_point
 	return r;
 }
 
-
 saver	*min_found(int maze[FX][FY], MageStack	**m)
 {
-	int visited[FX][FY] = { 0,};
 	saver *r = save(*m);
 	int	count = (*m)->currentElementCount;
 	StackNode t;
@@ -220,17 +222,19 @@ saver	*min_found(int maze[FX][FY], MageStack	**m)
 	while(!isMageStackEmpty(*m))
 	{
 		t = *peekLS(*m);
-		visited[t.x][t.y] = TRUE;
-		if (t.x == FX -1 && t.y == FY - 1 && count > (*m)->currentElementCount)
+		
+		if (count < (*m)->currentElementCount)
+			popLS(m);
+		else if (t.x == FX -1 && t.y == FY - 1 && count > (*m)->currentElementCount)
 		{
 			delete_save(&r);
 			r = save(*m);
 			count = (*m)->currentElementCount;
 		}
-		if (t.dir == 1)
+		else if (t.dir == 1)
 		{
 			(*m)->pTopElement->tail->dir++;
-			if(t.x -1 >=0 && maze[t.x - 1][t.y] && !visited[t.x-1][t.y])
+			if(t.x -1 >=0 && maze[t.x - 1][t.y] && !(*m)->visited[t.x -1][t.y])
 			{
 				q.x = t.x -1;
 				q.y = t.y;
@@ -243,7 +247,7 @@ saver	*min_found(int maze[FX][FY], MageStack	**m)
 		else if (t.dir == 2)
 		{
 			(*m)->pTopElement->tail->dir++;
-			if(t.y + 1 < FY && maze[t.x][t.y+1] && !visited[t.x][t.y+1])
+			if(t.y + 1 < FY && maze[t.x][t.y+1] && !(*m)->visited[t.x][t.y + 1])
 			{
 				q.x = t.x;
 				q.y = t.y+1;
@@ -256,7 +260,7 @@ saver	*min_found(int maze[FX][FY], MageStack	**m)
 		else if (t.dir == 3)
 		{
 			(*m)->pTopElement->tail->dir++;
-			if(t.x + 1 < FY && maze[t.x +1][t.y] && !visited[t.x + 1][t.y])
+			if(t.x + 1 < FY && maze[t.x +1][t.y] && !(*m)->visited[t.x+1][t.y])
 			{
 				q.x = t.x+1;
 				q.y = t.y;
@@ -269,7 +273,7 @@ saver	*min_found(int maze[FX][FY], MageStack	**m)
 		else if (t.dir == 4)
 		{
 			(*m)->pTopElement->tail->dir++;
-			if(t.y -1 >=0 && maze[t.x][t.y-1] && !visited[t.x][t.y-1])
+			if(t.y -1 >=0 && maze[t.x][t.y-1] && !(*m)->visited[t.x][t.y-1])
 			{
 				q.x = t.x;
 				q.y = t.y -1;
@@ -299,57 +303,66 @@ saver	*min_found(int maze[FX][FY], MageStack	**m)
 		{1, 0, 0, 0, 0, 0, 0, 0, 1, 1},
 		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 */
+/*
+		{1, 1, 1, 1, 1},
+        {1, 0, 0, 0, 1},
+        {1, 0, 1, 1, 1},
+        {1, 0, 1, 0, 0},
+		{1, 1, 1, 1, 1}
+*/
 int main()
 {
 	 int maze[FX][FY] = {
-        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+	 	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        {1, 0, 0, 0, 1, 0, 0, 0, 0, 1},
         {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-        {1, 0, 0, 0, 0, 0, 0, 0, 1, 0},
-		{1, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+        {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
 		{1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
 		{1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-		{1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-		{1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-    };
+		{1, 0, 0, 0, 0, 0, 0, 1, 1, 1},
+		{1, 0, 0, 0, 0, 0, 0, 1, 0, 0},
+		{1, 0, 0, 0, 0, 0, 0, 1, 0, 0},
+		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1} };
 	MageStack	*t = found(maze);
 	if (t)
 	{
-		saver	*m = min_found(maze, &t);
-		int b = 0;
-		printf("path found!\n");
-		if (m)
-		{
-			for(int i = 0; i < m->count;i++)
+		int	canvas2[FX][FY] = {0 ,};
+		StackNode *tt = t->pTopElement;
+		for (int i = 0; i < t->currentElementCount; i++)
 			{
-			printf("%d",m->arr[i].x);
-			printf("%d ",m->arr[i].y);
+				canvas2[tt->x][tt->y] = 1;
+				tt = tt->pLink;
+			}
+		for(int i = 0; i < FX; i++)
+		{
+			for(int j = 0; j < FY; j++)
+			{
+				printf("%d ",canvas2[i][j]);
 			}
 			printf("\n");
-			printf("min path found\n");
-			for(int w = 0; w <FX; w++)
+		}
+
+		saver	*m = min_found(maze, &t);
+		int	canvas[FX][FY] = {0 ,};
+		if (m)
+		{
+			printf("min path \n");
+			for (int i = 0; i < m->count; i++)
 			{
-				for(int q = 0; q< FY; q++)
+				canvas[m->arr[i].x][m->arr[i].y] = 1;
+			}
+			for(int i = 0; i < FX; i++)
+			{
+				for(int j = 0; j < FY; j++)
 				{
-					if (m->arr[b].x == w && m->arr[b].y == q)
-					{
-						printf("1 ");
-						b++;
-					}
-					else
-					{
-						printf("2 ");
-					}
+					printf("%d ",canvas[i][j]);
 				}
 				printf("\n");
 			}
 			delete_save(&m);
 		}
-		else
-			printf("there only one path\n");
 	}
 	else
-		printf("no path found!\n");
+		printf("path not found!\n");
 	return 0;
 }
