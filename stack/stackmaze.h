@@ -19,6 +19,7 @@ typedef struct StackNodeType
 typedef struct MageStackType
 {
 	int visited[FX][FY][FF];
+	int visited_2[FX][FY];
 	int currentElementCount;
 	StackNode* pTopElement;
 } MageStack;
