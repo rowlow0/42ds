@@ -329,20 +329,33 @@ saver	*min_found(int maze[FX][FY], MageStack	**m)
 		{1, 0, 0, 0, 0, 0, 0, 1, 0, 0},
 		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 */
-int main()
-{
-	 int maze[FX][FY] = {
+/*
 		{1, 1, 1, 1, 1},
         {1, 0, 0, 1, 1},
         {1, 0, 1, 1, 1},
         {1, 1, 1, 0, 0},
 		{0, 1, 1, 1, 1}
+*/
+int main()
+{
+	 int maze[FX][FY] = {
+		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        {1, 0, 1, 1, 1, 1, 1, 1, 0, 1},
+        {1, 0, 1, 1, 1, 1, 1, 1, 0, 1},
+		{1, 0, 1, 1, 1, 1, 1, 1, 1, 1},
+		{1, 0, 1, 1, 1, 1, 1, 1, 0, 1},
+		{1, 0, 1, 1, 1, 1, 1, 1, 0, 1},
+		{1, 0, 1, 1, 1, 1, 0, 1, 0, 0},
+		{1, 1, 0, 0, 0, 0, 0, 1, 0, 0},
+		{0, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 		};
 	MageStack	*t = found(maze);
 	if (t)
 	{
 		int	canvas2[FX][FY] = {0 ,};
 		StackNode *tt = t->pTopElement;
+		printf("there are path ..\n");
 		for (int i = 0; i < t->currentElementCount; i++)
 			{
 				canvas2[tt->x][tt->y] = 1;
@@ -361,7 +374,7 @@ int main()
 		int	canvas[FX][FY] = {0 ,};
 		if (m)
 		{
-			printf("min path \n");
+			printf("min path ..\n");
 			for (int i = 0; i < m->count; i++)
 			{
 				canvas[m->arr[i].x][m->arr[i].y] = 1;

@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define FX 5
-#define FY 5
+#define FX 10
+#define FY 10
 #define FF 4
 typedef struct StackNodeType
 {
