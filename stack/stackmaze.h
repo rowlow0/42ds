@@ -33,6 +33,7 @@ typedef struct SaverNode
 typedef struct Saver
 {
 	int	count;
+	int	max_count;
 	saverNode *arr;
 }	saver;
 

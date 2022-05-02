@@ -209,6 +209,7 @@ saver	*save(MageStack *ls) // save_point
 saver	*min_found(int maze[FX][FY], MageStack	**m)
 {
 	saver *r = save(*m);
+	r->max_count = 1;
 	int	count = (*m)->currentElementCount;
 	StackNode t;
 	StackNode q;
@@ -221,6 +222,8 @@ saver	*min_found(int maze[FX][FY], MageStack	**m)
 	{
 		t = *peekLS(*m);
 		(*m)->visited_2[t.x][t.y] = FALSE;
+		if (count == (*m)->currentElementCount && t.x == FX -1 && t.y == FY - 1 && t.dir == 1)
+			r->max_count++;
 		if (count < (*m)->currentElementCount)
 		{
 			(*m)->visited_2[t.x][t.y] = FALSE;
@@ -234,6 +237,7 @@ saver	*min_found(int maze[FX][FY], MageStack	**m)
 		{
 			delete_save(&r);
 			r = save(*m);
+			r->max_count = 0;
 			count = (*m)->currentElementCount;
 		}
 		else if (t.dir == 1 && t.x -1 >=0 && maze[t.x - 1][t.y] && !(*m)->visited[t.x][t.y][t.dir-1] && !(*m)->visited_2[t.x-1][t.y])
@@ -333,18 +337,30 @@ saver	*min_found(int maze[FX][FY], MageStack	**m)
         {1, 1, 1, 0, 0},
 		{0, 1, 1, 1, 1}
 */
-int main()
-{
-	 int maze[FX][FY] = {
-		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+/*
+		{1, 0, 0, 1, 1, 1, 1, 1, 1, 1},
         {1, 1, 1, 0, 1, 1, 0, 1, 0, 1},
         {1, 0, 1, 1, 1, 1, 1, 1, 0, 1},
         {1, 0, 1, 0, 0, 0, 0, 1, 0, 1},
 		{1, 0, 1, 0, 1, 1, 0, 1, 1, 1},
-		{1, 1, 1, 0, 1, 1, 0, 1, 0, 1},
-		{1, 1, 1, 0, 0, 1, 1, 1, 0, 1},
-		{1, 1, 1, 1, 1, 0, 0, 1, 0, 0},
-		{1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
+		{1, 0, 1, 0, 1, 1, 0, 1, 0, 1},
+		{1, 0, 1, 0, 0, 1, 1, 1, 0, 1},
+		{1, 0, 1, 1, 1, 1, 0, 1, 0, 0},
+		{1, 0, 0, 0, 0, 1, 0, 0, 0, 0},
+		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+*/
+int main()
+{
+	 int maze[FX][FY] = {
+		{1, 0, 0, 1, 1, 1, 1, 1, 1, 1},
+        {1, 1, 1, 0, 1, 1, 0, 1, 0, 1},
+        {1, 0, 1, 1, 1, 1, 1, 1, 0, 1},
+        {1, 0, 1, 0, 0, 0, 0, 1, 0, 1},
+		{1, 0, 1, 0, 1, 1, 0, 1, 1, 1},
+		{1, 0, 1, 0, 1, 1, 0, 1, 0, 1},
+		{1, 0, 1, 0, 0, 1, 1, 1, 0, 1},
+		{1, 1, 1, 1, 1, 1, 0, 1, 0, 0},
+		{1, 1, 0, 0, 0, 1, 0, 0, 0, 0},
 		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 		};
 	MageStack	*t = found(maze);
@@ -368,10 +384,10 @@ int main()
 		}
 
 		saver	*m = min_found(maze, &t);
+		printf("min path .. [count %d]\n", m->max_count);
 		int	canvas[FX][FY] = {0 ,};
 		if (m)
 		{
-			printf("min path ..\n");
 			for (int i = 0; i < m->count; i++)
 			{
 				canvas[m->arr[i].x][m->arr[i].y] = 1;
