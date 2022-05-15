@@ -6,7 +6,11 @@ BinTree* makeBinTree(BinTreeNode rootNode)
 
     newTree = malloc(sizeof(BinTree));
     newTree->pRootNode = malloc(sizeof(BinTreeNode));
-    *(newTree->pRootNode) = rootNode;
+    newTree->pRootNode->data = rootNode.data;
+    newTree->pRootNode->pLeftChild = 0;
+    newTree->pRootNode->pRightChild = 0;
+    newTree->pRootNode->next = 0;
+    newTree->pRootNode->visited = 0;
     return(newTree);
 }
 
@@ -19,19 +23,31 @@ BinTreeNode* getRootNodeBT(BinTree* pBinTree)
 
 BinTreeNode* insertLeftChildNodeBT(BinTreeNode* pParentNode, BinTreeNode element)
 {
-    if (pParentNode->pLeftChild != NULL)
+    if (pParentNode->pLeftChild)
         return (NULL);
-    pParentNode->pLeftChild = malloc(sizeof(BinTreeNode));
-    *(pParentNode->pLeftChild) = element;
+    pParentNode->pLeftChild = calloc(1, sizeof(BinTreeNode));
+    pParentNode->pLeftChild->data = element.data;
+    /*
+    pParentNode->pLeftChild->pLeftChild = 0;
+    pParentNode->pLeftChild->pRightChild = 0;
+    pParentNode->pLeftChild->next = 0;
+    pParentNode->pLeftChild->visited = 0;
+    */
     return (pParentNode->pLeftChild);
 }
 
+            ///* malloc vs calloc *///
+
 BinTreeNode* insertRightChildNodeBT(BinTreeNode* pParentNode, BinTreeNode element)
 {
-    if (pParentNode->pRightChild != NULL)
+    if (pParentNode->pRightChild)
         return (NULL);
     pParentNode->pRightChild = malloc(sizeof(BinTreeNode));
-    *(pParentNode->pRightChild) = element;
+    pParentNode->pRightChild->data = element.data;
+    pParentNode->pRightChild->pLeftChild = 0;
+    pParentNode->pRightChild->pRightChild = 0;
+    pParentNode->pRightChild->next = 0;
+    pParentNode->pRightChild->visited = 0;
     return (pParentNode->pRightChild);
 }
 
@@ -44,22 +60,23 @@ BinTreeNode* getLeftChildNodeBT(BinTreeNode* pNode)
 
 BinTreeNode* getRightChildNodeBT(BinTreeNode* pNode)
 {
+    return (pNode->pRightChild);
+    /*
     if (pNode && pNode->pRightChild)
-        return (pNode->pRightChild);
-    return (NULL);
+        return (NULL);
+    */
 }
 
 void deleteBinTree(BinTree** pBinTree)
 {
-    BinTreeNode *rootNode;
-    if (!pBinTree || !(*pBinTree) || !((*pBinTree)->pRootNode))
+    if (!(*pBinTree) || !((*pBinTree)->pRootNode))
         return ;
-    rootNode = (*pBinTree)->pRootNode;
-    deleteAllNode(rootNode);
+    deleteAllNode((*pBinTree)->pRootNode);
     free(*pBinTree);
     *pBinTree = NULL;
 }
 
+//post order
 void  deleteAllNode(BinTreeNode *root)
 {
     if (root == NULL)
@@ -69,15 +86,70 @@ void  deleteAllNode(BinTreeNode *root)
     free(root);
 }
 
-void  deleteAllNode2(BinTreeNode *root)
+//https://www.geeksforgeeks.org/non-recursive-program-to-delete-an-entire-binary-tree/
+//delete Queue without recussive method
+typedef struct Queue
 {
-    if (root == NULL)
-        return;
-    deleteAllNode(root->pLeftChild);
-    deleteAllNode(root->pRightChild);
-    free(root);
+    int         i;
+	BinTreeNode *front;
+    BinTreeNode *rear;
+} queue;
+
+queue *create(BinTreeNode * node)
+{
+    queue *q = malloc(sizeof(queue));
+    q->i = 1;
+    q->rear = node;
+    q->front = node;
+    return q;
 }
 
+void enqueue(queue *q, BinTreeNode *node)
+{
+    q->rear->next = node;
+    q->rear = node;
+    q->i++;
+}
+
+void dequeue(queue *q)
+{
+    BinTreeNode *t = q->front;
+    q->front = q->front->next;
+    free(t);
+    q->i--;
+}
+
+int empty(queue *q)
+{
+    return !q || q->i == 0;
+}
+
+void  deleteAllNode2(BinTreeNode *root)
+{
+    queue *q = create(root);
+    while(!empty(q))
+    {
+        if (q->front->pLeftChild)
+            enqueue(q, q->front->pLeftChild);
+        if (q->front->pRightChild)
+            enqueue(q, q->front->pRightChild);
+        dequeue(q);
+    }
+    free(q);
+    root = 0;
+}
+
+void deleteBinTree2(BinTree** pBinTree)
+{
+    if (!(*pBinTree) || !((*pBinTree)->pRootNode))
+        return ;
+    deleteAllNode2((*pBinTree)->pRootNode);
+    free(*pBinTree);
+    *pBinTree = NULL;
+}
+
+//https://stackoverflow.com/questions/45122270/deleting-a-node-from-a-binary-search-tree-without-recursion
+//https://www.codezclub.com/c-binary-tree-deletion-without-recursion/
 //not working
 void deleteBinTreeNode(BinTreeNode** pNode)
 {
@@ -88,6 +160,7 @@ void deleteBinTreeNode(BinTreeNode** pNode)
     }
 }
 
+//recursive
 void preOrderTraversalBinTree(BinTreeNode *root)
 {
     if (root == NULL)
@@ -97,6 +170,7 @@ void preOrderTraversalBinTree(BinTreeNode *root)
     preOrderTraversalBinTree(root->pRightChild);
 }
 
+//recursive
 void inOrderTraversalBinTree(BinTreeNode *root)
 {
     if (root == NULL)
@@ -106,6 +180,7 @@ void inOrderTraversalBinTree(BinTreeNode *root)
     inOrderTraversalBinTree(root->pRightChild);
 }
 
+//recursive
 void postOrderTraversalBinTree(BinTreeNode *root)
 {
     if (root)
@@ -116,6 +191,8 @@ void postOrderTraversalBinTree(BinTreeNode *root)
     }
 }
 
+//https://www.geeksforgeeks.org/morris-traversal-for-postorder/
+//iterator
 void preOrder(BinTreeNode *root)
 {
     while (root)
@@ -146,6 +223,7 @@ void preOrder(BinTreeNode *root)
     printf("\n");
 }
 
+//iterator
 void inOrder(BinTreeNode* root)
 {
     if (!root)
@@ -174,6 +252,7 @@ void inOrder(BinTreeNode* root)
     printf("\n");
 }
 
+//iterator
 void postOrder(BinTreeNode *root)
 {
     if (!root)
@@ -227,49 +306,41 @@ void postOrder(BinTreeNode *root)
     printf("\n");
     free(result);
 }
-
-void sPreOrder(BinTreeNode *root)
+/*
+void PreOrder2(BinTreeNode *root)
 {
     
 }
 
-void sInOrder(BinTreeNode *root)
+void InOrder2(BinTreeNode *root)
 {
     
 }
 
-void sPostOrder(BinTreeNode *root)
+void PostOrder2(BinTreeNode *root)
 {
     
 }
-
+*/
 int main()
 {
     BinTree *tree;
     BinTreeNode t;
     t.data = '1';
-    t.visited = 0;
     tree =  makeBinTree(t);
-    t.data = '2';
-    t.visited = 0;
+    t.data = '2'; 
     insertLeftChildNodeBT(tree->pRootNode,t);
     t.data = '3';
-    t.visited = 0;
     insertRightChildNodeBT(tree->pRootNode,t);
     t.data = '4';
-    t.visited = 0;
     insertLeftChildNodeBT(tree->pRootNode->pLeftChild,t);
     t.data = '5';
-    t.visited = 0;
     insertRightChildNodeBT(tree->pRootNode->pLeftChild,t);
     t.data = '6';
-    t.visited = 0;
     insertLeftChildNodeBT(tree->pRootNode->pRightChild,t);
     t.data = '7';
-    t.visited = 0;
     insertRightChildNodeBT(tree->pRootNode->pRightChild,t);
     t.data = '8';
-    t.visited = 0;
     insertLeftChildNodeBT(tree->pRootNode->pLeftChild->pLeftChild,t);
     preOrderTraversalBinTree(tree->pRootNode);printf("\n");
     preOrder(tree->pRootNode);
@@ -277,7 +348,7 @@ int main()
     inOrder(tree->pRootNode);
     postOrderTraversalBinTree(tree->pRootNode);printf("\n");
     postOrder(tree->pRootNode);
-    deleteBinTree(&tree);
+    deleteBinTree2(&tree); //deleteBinTree(&tree);
     system("leaks a.out");
     return (0);
 }

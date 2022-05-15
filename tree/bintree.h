@@ -11,6 +11,7 @@ typedef struct BinTreeNodeType
 
 	struct BinTreeNodeType* pLeftChild;
 	struct BinTreeNodeType* pRightChild;
+	struct BinTreeNodeType* next; // for queue
 } BinTreeNode;
 
 typedef struct BinTreeType
