@@ -12,6 +12,7 @@ typedef struct BinTreeNodeType
 	struct BinTreeNodeType* pLeftChild;
 	struct BinTreeNodeType* pRightChild;
 	struct BinTreeNodeType* next; // for queue
+	struct BinTreeNodeType* parent; // for delete node
 } BinTreeNode;
 
 typedef struct BinTreeType
@@ -26,7 +27,7 @@ BinTreeNode* insertRightChildNodeBT(BinTreeNode* pParentNode, BinTreeNode elemen
 BinTreeNode* getLeftChildNodeBT(BinTreeNode* pNode);
 BinTreeNode* getRightChildNodeBT(BinTreeNode* pNode);
 void deleteBinTree(BinTree** pBinTree);
-void deleteBinTreeNode(BinTreeNode** pNode);
+void deleteBinTreeNode(BinTreeNode* pNode, BinTree *root);
 void  deleteAllNode(BinTreeNode *root);
 
 #endif
