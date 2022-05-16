@@ -270,9 +270,8 @@ void postOrder(BinTreeNode *root)
         else
         {
             BinTreeNode* predecessor = root->pRightChild;
-            if (predecessor)
-                while (predecessor->pLeftChild && predecessor->pLeftChild != root)
-                    predecessor = predecessor->pLeftChild;
+            while (predecessor->pLeftChild && predecessor->pLeftChild != root)
+                predecessor = predecessor->pLeftChild;
             if (predecessor->pLeftChild == NULL)
             {
                 *(result + m++) = root->data;
