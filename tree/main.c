@@ -105,6 +105,7 @@ queue *create(BinTreeNode * node)
     queue *q = malloc(sizeof(queue));
     q->rear = node;
     q->front = node;
+    q->i = 1;
     return q;
 }
 
