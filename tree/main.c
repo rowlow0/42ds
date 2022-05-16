@@ -21,6 +21,7 @@ BinTreeNode* getRootNodeBT(BinTree* pBinTree)
     return (NULL);
 }
 
+//calloc
 BinTreeNode* insertLeftChildNodeBT(BinTreeNode* pParentNode, BinTreeNode element)
 {
     if (pParentNode->pLeftChild)
@@ -36,8 +37,7 @@ BinTreeNode* insertLeftChildNodeBT(BinTreeNode* pParentNode, BinTreeNode element
     return (pParentNode->pLeftChild);
 }
 
-            ///* malloc vs calloc *///
-
+//malloc
 BinTreeNode* insertRightChildNodeBT(BinTreeNode* pParentNode, BinTreeNode element)
 {
     if (pParentNode->pRightChild)
@@ -86,7 +86,6 @@ void  deleteAllNode(BinTreeNode *root)
     free(root);
 }
 
-//https://www.geeksforgeeks.org/non-recursive-program-to-delete-an-entire-binary-tree/
 //delete Queue without recussive method
 typedef struct Queue
 {
@@ -98,7 +97,6 @@ typedef struct Queue
 queue *create(BinTreeNode * node)
 {
     queue *q = malloc(sizeof(queue));
-    q->i = 1;
     q->rear = node;
     q->front = node;
     return q;
@@ -121,22 +119,25 @@ void dequeue(queue *q)
 
 int empty(queue *q)
 {
-    return !q || q->i == 0;
+    return q->i == 0;
 }
 
 void  deleteAllNode2(BinTreeNode *root)
 {
-    queue *q = create(root);
-    while(!empty(q))
+    if(root)
     {
-        if (q->front->pLeftChild)
-            enqueue(q, q->front->pLeftChild);
-        if (q->front->pRightChild)
-            enqueue(q, q->front->pRightChild);
-        dequeue(q);
+        queue *q = create(root);
+        while(!empty(q))
+        {
+            if (q->front->pLeftChild)
+                enqueue(q, q->front->pLeftChild);
+            if (q->front->pRightChild)
+                enqueue(q, q->front->pRightChild);
+            dequeue(q);
+        }
+        free(q);
+        root = 0;
     }
-    free(q);
-    root = 0;
 }
 
 void deleteBinTree2(BinTree** pBinTree)
@@ -148,8 +149,6 @@ void deleteBinTree2(BinTree** pBinTree)
     *pBinTree = NULL;
 }
 
-//https://stackoverflow.com/questions/45122270/deleting-a-node-from-a-binary-search-tree-without-recursion
-//https://www.codezclub.com/c-binary-tree-deletion-without-recursion/
 //not working
 void deleteBinTreeNode(BinTreeNode** pNode)
 {
@@ -191,7 +190,6 @@ void postOrderTraversalBinTree(BinTreeNode *root)
     }
 }
 
-//https://www.geeksforgeeks.org/morris-traversal-for-postorder/
 //iterator
 void preOrder(BinTreeNode *root)
 {
@@ -307,16 +305,19 @@ void postOrder(BinTreeNode *root)
     free(result);
 }
 /*
+//stack
 void PreOrder2(BinTreeNode *root)
 {
     
 }
 
+//stack
 void InOrder2(BinTreeNode *root)
 {
     
 }
 
+//stack
 void PostOrder2(BinTreeNode *root)
 {
     
@@ -324,11 +325,12 @@ void PostOrder2(BinTreeNode *root)
 */
 int main()
 {
+    //init
     BinTree *tree;
     BinTreeNode t;
     t.data = '1';
     tree =  makeBinTree(t);
-    t.data = '2'; 
+    t.data = '2';
     insertLeftChildNodeBT(tree->pRootNode,t);
     t.data = '3';
     insertRightChildNodeBT(tree->pRootNode,t);
@@ -342,11 +344,11 @@ int main()
     insertRightChildNodeBT(tree->pRootNode->pRightChild,t);
     t.data = '8';
     insertLeftChildNodeBT(tree->pRootNode->pLeftChild->pLeftChild,t);
-    preOrderTraversalBinTree(tree->pRootNode);printf("\n");
+    //preOrderTraversalBinTree(tree->pRootNode);printf("\n");
     preOrder(tree->pRootNode);
-    inOrderTraversalBinTree(tree->pRootNode);printf("\n");
+    //inOrderTraversalBinTree(tree->pRootNode);printf("\n");
     inOrder(tree->pRootNode);
-    postOrderTraversalBinTree(tree->pRootNode);printf("\n");
+    //postOrderTraversalBinTree(tree->pRootNode);printf("\n");
     postOrder(tree->pRootNode);
     deleteBinTree2(&tree); //deleteBinTree(&tree);
     system("leaks a.out");
