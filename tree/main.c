@@ -130,20 +130,17 @@ int empty(queue *q)
 
 void  deleteAllNode2(BinTreeNode *root)
 {
-    if(root)
+    queue *q = create(root);
+    while(!empty(q))
     {
-        queue *q = create(root);
-        while(!empty(q))
-        {
-            if (q->front->pLeftChild)
-                enqueue(q, q->front->pLeftChild);
-            if (q->front->pRightChild)
-                enqueue(q, q->front->pRightChild);
-            dequeue(q);
-        }
-        free(q);
-        root = 0;
+        if (q->front->pLeftChild)
+            enqueue(q, q->front->pLeftChild);
+        if (q->front->pRightChild)
+            enqueue(q, q->front->pRightChild);
+        dequeue(q);
     }
+    free(q);
+    root = 0;
 }
 
 void deleteBinTree2(BinTree** pBinTree)
