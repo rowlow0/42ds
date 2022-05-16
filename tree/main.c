@@ -160,6 +160,7 @@ void deleteBinTree2(BinTree** pBinTree)
 
 //delete node
 
+//binary tree
 BinTreeNode* find_minimum(BinTreeNode* pNode)
 {
     while (pNode ->pLeftChild)
@@ -168,7 +169,6 @@ BinTreeNode* find_minimum(BinTreeNode* pNode)
 }
 
 //node
-
 void deleteBinTreeNode(BinTreeNode* pNode, BinTree *tree)
 {
     if (!pNode)
@@ -371,28 +371,99 @@ void postOrder(BinTreeNode *root)
     printf("\n");
     free(result);
 }
-/*
 
 //traverse3
 
 //stack
-void PreOrder2(BinTreeNode *root)
+void preOrder2(BinTreeNode *root)
 {
-    
+    BinTreeNode *s = NULL;
+      while(1)
+      {
+          if(root)
+          {
+            printf("%c ",root->data);
+              root->parent = s;
+              s = root;
+              root = root->pLeftChild;
+          }
+          else
+          {
+              if(s)
+              {
+                root = s;
+                s = s->parent;
+                root = root->pRightChild;
+              }
+              else
+                break;
+          }
+      }
+      printf("\n");
 }
 
 //stack
-void InOrder2(BinTreeNode *root)
+void inOrder2(BinTreeNode *root)
 {
-    
+      BinTreeNode *s = NULL;
+      while(1)
+      {
+          if(root)
+          {
+              root->parent = s;
+              s = root;
+              root = root->pLeftChild;
+          }
+          else
+          {
+              if(s)
+              {
+                root = s;
+                s = s->parent;
+                printf("%c ",root->data);
+                root = root->pRightChild;
+              }
+              else
+                break;
+          }
+      }
+      printf("\n");
 }
 
 //stack
-void PostOrder2(BinTreeNode *root)
+void postOrder2(BinTreeNode *root)
 {
-    
+      BinTreeNode *s = NULL;
+      do
+      {
+          while(root)
+          {
+            if(root->pRightChild)
+            {
+                root->pRightChild->parent = s;
+                s = root->pRightChild;
+            }
+            root->parent = s;
+            s = root;
+            root = root->pLeftChild;
+          }
+          root = s;
+          s = s->parent;
+          if (root->pRightChild && s == root->pRightChild)
+          {
+              s = s->parent;
+              root->parent = s;
+              s = root;
+              root = root->pRightChild;
+          }
+          else
+          {
+              printf("%c ", root->data);
+              root = NULL;
+          }
+      }while(s);
+      printf("\n");
 }
-*/
 
 /*
 //rotate && arranagement
@@ -431,6 +502,7 @@ int main()
     t.data = '1';
     tree =  makeBinTree(t);
     inOrder(tree->pRootNode);
+    inOrder2(tree->pRootNode);
     deleteBinTreeNode(tree->pRootNode,tree);
     deleteBinTree2(&tree);
 
@@ -465,6 +537,32 @@ int main()
     deleteBinTree2(&tree);
     printf("==============================================\n");
 
+    t.data = '1';
+    tree =  makeBinTree(t);
+    t.data = '2';
+    insertLeftChildNodeBT(tree->pRootNode,t);
+    t.data = '3';
+    insertRightChildNodeBT(tree->pRootNode,t);
+    t.data = '4';
+    insertLeftChildNodeBT(tree->pRootNode->pLeftChild,t);
+    t.data = '5';
+    insertRightChildNodeBT(tree->pRootNode->pLeftChild,t);
+    t.data = '6';
+    insertLeftChildNodeBT(tree->pRootNode->pRightChild,t);
+    t.data = '7';
+    insertRightChildNodeBT(tree->pRootNode->pRightChild,t);
+    t.data = '8';
+    insertLeftChildNodeBT(tree->pRootNode->pLeftChild->pLeftChild,t);
+    preOrderTraversalBinTree(tree->pRootNode);printf("\n");
+    preOrder(tree->pRootNode);
+    preOrder2(tree->pRootNode);
+    inOrderTraversalBinTree(tree->pRootNode);printf("\n");
+    inOrder(tree->pRootNode);
+    inOrder2(tree->pRootNode);
+    postOrderTraversalBinTree(tree->pRootNode);printf("\n");
+    postOrder(tree->pRootNode);
+    postOrder2(tree->pRootNode);
+    deleteBinTree2(&tree);
     system("leaks a.out");
     return (0);
 }

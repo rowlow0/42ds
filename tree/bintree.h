@@ -7,12 +7,12 @@
 typedef struct BinTreeNodeType
 {
 	char data;
-	int visited;
+	int visited; //dummy data
 
 	struct BinTreeNodeType* pLeftChild;
 	struct BinTreeNodeType* pRightChild;
 	struct BinTreeNodeType* next; // for queue
-	struct BinTreeNodeType* parent; // for delete node
+	struct BinTreeNodeType* parent; // for delete node and stack
 } BinTreeNode;
 
 typedef struct BinTreeType
