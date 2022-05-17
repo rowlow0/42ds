@@ -78,7 +78,7 @@ BinTreeNode* getRightChildNodeBT(BinTreeNode* pNode)
 
 void deleteBinTree(BinTree** pBinTree)
 {
-    if (!(*pBinTree))
+    if (!pBinTree)
         return ;
     if ((*pBinTree)->pRootNode)
         deleteAllNode((*pBinTree)->pRootNode);
@@ -149,7 +149,7 @@ void  deleteAllNode2(BinTreeNode *root)
 
 void deleteBinTree2(BinTree** pBinTree)
 {
-    if (*pBinTree)
+    if (pBinTree)
     {
         if ((*pBinTree)->pRootNode)
             deleteAllNode2((*pBinTree)->pRootNode);
@@ -219,7 +219,7 @@ void deleteBinTreeNode(BinTreeNode* pNode, BinTree *tree)
 /*
 void deleteBinTreeNode2(BinTreeNode** pNode, char c, BinTree *root)
 {
-    if (*pNode)
+    if (pNode)
     {
         free(*pNode);
         *pNode = NULL;
@@ -575,6 +575,8 @@ int main()
     insertRightChildNodeBT(tree->pRootNode,t);
     deleteBinTreeNode(tree->pRootNode->pLeftChild,tree);
     inOrder(tree->pRootNode);
+    deleteBinTree2(0);
+    deleteBinTree2(&tree);
     system("leaks a.out");
     return (0);
 }
