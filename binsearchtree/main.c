@@ -9,9 +9,11 @@ BinTree* makeBinSearchTree(BinTreeNode rootNode)
 {
     BinTree *newTree;
 
-    newTree = calloc(1, sizeof(BinTree));
+    newTree = malloc(sizeof(BinTree));
     newTree->pRootNode = calloc(1, sizeof(BinTreeNode));
-    *(newTree->pRootNode) = rootNode;
+    newTree->pRootNode->key = rootNode.key;
+    newTree->pRootNode->data = rootNode.data;
+    newTree->pRootNode->parent = 0;
     return(newTree);
 }
 
@@ -44,13 +46,17 @@ BinTreeNode *insertUtiRecurssive(BinTreeNode *root, int key, BinTreeNode *root2)
 
 BinTreeNode *insertBinSearchTree(BinTree *tree, BinTreeNode element)
 {
-    if (searchBinTreeNode(tree, element.key))
+    if (!searchBinTreeNode(tree, element.key))
     {
         BinTreeNode *pParentNode = insertUtiRecurssive(tree->pRootNode, element.key, 0);
-        BinTreeNode *tmp = pParentNode->key >element.key ? \
-            pParentNode->pLeftChild : pParentNode->pRightChild;
-        tmp = calloc(1, sizeof(BinTreeNode));
-        *tmp = element;
+        BinTreeNode *tmp = calloc(1, sizeof(BinTreeNode));
+        tmp->data = element.data;
+        tmp->key = element.data;
+        tmp->parent = pParentNode;
+        if(pParentNode->key >element.key)
+            pParentNode->pLeftChild = tmp;
+        else
+            pParentNode->pRightChild = tmp;
         return (tmp);
     }
     else
@@ -118,6 +124,103 @@ void deleteBinSearchTreeNode(BinTreeNode* pNode, BinTree *tree)
     }
 }
 
+
+//stack
+void preOrder2B(BinTreeNode *root)
+{
+    BinTreeNode *s = NULL;
+    int         done = 1;
+      while(done)
+      {
+          if(root)
+          {
+            printf("%d ",root->key);
+            root->parent = s;
+            s = root; // push
+            root = root->pLeftChild;
+          }
+          else
+          {
+              if(s)
+              {
+                root = s;
+                s = s->parent; // pop
+                root = root->pRightChild;
+              }
+              else
+                done = 0;
+          }
+      }
+      printf("\n");
+}
+
+//iterator
+void inOrderB(BinTreeNode* root)
+{
+    if (!root)
+        return;
+    while (root)
+    {
+        if (root->pLeftChild == NULL)
+        {
+            printf("%d ", root->key);
+            root = root->pRightChild;
+        }
+        else
+        {
+            BinTreeNode *pre = root->pLeftChild;
+            while (pre->pRightChild && pre->pRightChild != root)
+                pre = pre->pRightChild;
+            if (!pre->pRightChild)
+            {
+                pre->pRightChild = root;
+                root = root->pLeftChild;
+            }
+            else
+            {
+                pre->pRightChild = NULL;
+                printf("%d ", root->key);
+                root = root->pRightChild;
+            }
+        }
+    }
+    printf("\n");
+}
+
+//stack
+void postOrder2B(BinTreeNode *root)
+{
+      BinTreeNode *s = NULL;
+      do
+      {
+          while(root) // go to left
+          {
+            if(root->pRightChild)
+            {
+                root->pRightChild->parent = s;
+                s = root->pRightChild;
+            } // set as root->pRightChild as parent of root
+            root->parent = s; 
+            s = root; // push
+            root = root->pLeftChild;
+          }
+          root = s;
+          s = s->parent; // pop
+          if (root->pRightChild && s == root->pRightChild) // if (root has right child)
+          {
+              root->parent = s->parent;
+              s = root; // push
+              root = root->pRightChild;
+          }
+          else
+          {
+              printf("%d ", root->key);
+              root = NULL;
+          }
+      }while(s);
+      printf("\n");
+}
+
 int main()
 {
     BinTreeNode root;
@@ -133,6 +236,10 @@ int main()
     insertBinSearchTree(tree, root);
     root.key = -5;
     insertBinSearchTree(tree, root);
-    preOrderTraversalBinTree(tree->pRootNode);
+        preOrder2B(tree->pRootNode);
+    inOrderB(tree->pRootNode);
+    postOrder2B(tree->pRootNode);
+    deleteBinTree2(&tree);
+    system("leaks a.out");
     return (0);
 }
