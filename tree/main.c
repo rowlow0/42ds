@@ -178,6 +178,10 @@ void deleteBinTreeNode(BinTreeNode* pNode, BinTree *tree)
     {
         if (pNode == tree->pRootNode)
             tree->pRootNode = 0;
+        else if (pNode->parent->pLeftChild == pNode)
+            pNode->parent->pLeftChild = 0;
+        else if (pNode->parent->pRightChild == pNode)
+            pNode->parent->pRightChild = 0;
         free(pNode);
     }
         //two
@@ -466,7 +470,7 @@ void postOrder2(BinTreeNode *root)
 }
 
 /*
-//rotate && arranagement
+//rotate && arranagement for balance of tree
 */
 int main()
 {
@@ -536,7 +540,6 @@ int main()
     postOrder(tree->pRootNode);
     deleteBinTree2(&tree);
     printf("==============================================\n");
-
     t.data = '1';
     tree =  makeBinTree(t);
     t.data = '2';
@@ -563,6 +566,17 @@ int main()
     postOrder(tree->pRootNode);
     postOrder2(tree->pRootNode);
     deleteBinTree2(&tree);
+    printf("==============================================\n");
+    t.data = '1';
+    tree =  makeBinTree(t);
+    t.data = '2';
+    insertLeftChildNodeBT(tree->pRootNode,t);
+    t.data = '3';
+    insertRightChildNodeBT(tree->pRootNode,t);
+    deleteBinTreeNode(tree->pRootNode->pLeftChild,tree);
+    inOrder(tree->pRootNode);
+
     system("leaks a.out");
+    
     return (0);
 }
