@@ -575,8 +575,6 @@ int main()
     insertRightChildNodeBT(tree->pRootNode,t);
     deleteBinTreeNode(tree->pRootNode->pLeftChild,tree);
     inOrder(tree->pRootNode);
-
     system("leaks a.out");
-    
     return (0);
 }
