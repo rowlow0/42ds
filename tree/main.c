@@ -7,11 +7,11 @@ BinTree* makeBinTree(BinTreeNode rootNode)
     newTree = malloc(sizeof(BinTree));
     newTree->pRootNode = malloc(sizeof(BinTreeNode));
     newTree->pRootNode->data = rootNode.data;
-    newTree->pRootNode->pLeftChild = 0;
-    newTree->pRootNode->pRightChild = 0;
-    newTree->pRootNode->next = 0;
-    newTree->pRootNode->visited = 0;
-    newTree->pRootNode->parent = 0;
+    //newTree->pRootNode->pLeftChild = 0;
+    //newTree->pRootNode->pRightChild = 0;
+    //newTree->pRootNode->next = 0;
+    //newTree->pRootNode->visited = 0;
+    //newTree->pRootNode->parent = 0;
     return(newTree);
 }
 
@@ -78,7 +78,7 @@ BinTreeNode* getRightChildNodeBT(BinTreeNode* pNode)
 
 void deleteBinTree(BinTree** pBinTree)
 {
-    if (!pBinTree)
+    if (!pBinTree || !(*pBinTree))
         return ;
     if ((*pBinTree)->pRootNode)
         deleteAllNode((*pBinTree)->pRootNode);
@@ -149,7 +149,7 @@ void  deleteAllNode2(BinTreeNode *root)
 
 void deleteBinTree2(BinTree** pBinTree)
 {
-    if (pBinTree)
+    if (pBinTree && *pBinTree)
     {
         if ((*pBinTree)->pRootNode)
             deleteAllNode2((*pBinTree)->pRootNode);
@@ -204,14 +204,15 @@ void deleteBinTreeNode(BinTreeNode* pNode, BinTree *tree)
     else
     {
         BinTreeNode* next = pNode->pLeftChild ? pNode->pLeftChild : pNode->pRightChild;
-        BinTreeNode*t = pNode;
         if (pNode->parent == 0)
-            tree->pRootNode = next;
+            tree->pRootNode->data = next->data;
         else if(pNode->parent->pLeftChild == pNode)
-            pNode->parent->pLeftChild = next;
+            pNode->data = next->data;
         else
-            pNode->parent->pRightChild = next;
-        free(t);
+            pNode->data = next->data;
+        pNode->pLeftChild = 0;
+        pNode->pRightChild = 0;
+        free(next);
     }
 }
 
@@ -275,8 +276,8 @@ void preOrder(BinTreeNode *root)
         else
         {
             BinTreeNode* current = root->pLeftChild;
-                while (current->pRightChild && current->pRightChild != root)
-                    current = current->pRightChild;
+            while (current->pRightChild && current->pRightChild != root)
+                current = current->pRightChild;
             if (current->pRightChild == root)
             {
                 current->pRightChild = NULL;
@@ -387,9 +388,9 @@ void preOrder2(BinTreeNode *root)
           if(root)
           {
             printf("%c ",root->data);
-              root->parent = s;
-              s = root;
-              root = root->pLeftChild;
+            root->parent = s;
+            s = root;
+            root = root->pLeftChild;
           }
           else
           {
@@ -469,8 +470,14 @@ void postOrder2(BinTreeNode *root)
       printf("\n");
 }
 
+
+// for balance of tree (AVL)
 /*
-//rotate && arranagement for balance of tree
+is_binary
+*/
+
+/*
+//rotate && arranagement
 */
 int main()
 {
@@ -573,9 +580,11 @@ int main()
     insertLeftChildNodeBT(tree->pRootNode,t);
     t.data = '3';
     insertRightChildNodeBT(tree->pRootNode,t);
+    preOrder(tree->pRootNode);
     deleteBinTreeNode(tree->pRootNode->pLeftChild,tree);
     inOrder(tree->pRootNode);
-    deleteBinTree2(0);
+    tree = NULL;
+    deleteBinTree2(&tree);
     deleteBinTree2(&tree);
     system("leaks a.out");
     return (0);
