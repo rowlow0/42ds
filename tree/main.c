@@ -3,15 +3,14 @@
 BinTree* makeBinTree(BinTreeNode rootNode)
 {
     BinTree *newTree;
-
     newTree = malloc(sizeof(BinTree));
     newTree->pRootNode = malloc(sizeof(BinTreeNode));
     newTree->pRootNode->data = rootNode.data;
-    //newTree->pRootNode->pLeftChild = 0;
-    //newTree->pRootNode->pRightChild = 0;
-    //newTree->pRootNode->next = 0;
-    //newTree->pRootNode->visited = 0;
-    //newTree->pRootNode->parent = 0;
+    newTree->pRootNode->pLeftChild = 0;
+    newTree->pRootNode->pRightChild = 0;
+    newTree->pRootNode->next = 0;
+    newTree->pRootNode->visited = 0;
+    newTree->pRootNode->parent = 0;
     return(newTree);
 }
 
@@ -27,7 +26,7 @@ BinTreeNode* getRootNodeBT(BinTree* pBinTree)
 //calloc
 BinTreeNode* insertLeftChildNodeBT(BinTreeNode* pParentNode, BinTreeNode element)
 {
-    if (pParentNode->pLeftChild)
+    if (!pParentNode || pParentNode->pLeftChild)
         return (NULL);
     pParentNode->pLeftChild = calloc(1, sizeof(BinTreeNode));
     pParentNode->pLeftChild->data = element.data;
@@ -44,7 +43,7 @@ BinTreeNode* insertLeftChildNodeBT(BinTreeNode* pParentNode, BinTreeNode element
 //malloc
 BinTreeNode* insertRightChildNodeBT(BinTreeNode* pParentNode, BinTreeNode element)
 {
-    if (pParentNode->pRightChild)
+    if (!pParentNode || pParentNode->pRightChild)
         return (NULL);
     pParentNode->pRightChild = malloc(sizeof(BinTreeNode));
     pParentNode->pRightChild->data = element.data;
@@ -80,8 +79,7 @@ void deleteBinTree(BinTree** pBinTree)
 {
     if (!pBinTree || !(*pBinTree))
         return ;
-    if ((*pBinTree)->pRootNode)
-        deleteAllNode((*pBinTree)->pRootNode);
+    deleteAllNode((*pBinTree)->pRootNode);
     free(*pBinTree);
     *pBinTree = NULL;
 }
@@ -234,7 +232,7 @@ void deleteBinTreeNode2(BinTreeNode** pNode, char c, BinTree *root)
 void preOrderTraversalBinTree(BinTreeNode *root)
 {
     if (root == NULL)
-        return;
+        return ;
     printf("%c ", root->data);
     preOrderTraversalBinTree(root->pLeftChild);
     preOrderTraversalBinTree(root->pRightChild);
@@ -299,24 +297,28 @@ void inOrder(BinTreeNode* root)
 {
     if (!root)
         return;
-    BinTreeNode *current = root, *pre;
-    while (current) {
-        if (!current->pLeftChild) {
-            printf("%c ", current->data);
-            current = current->pRightChild;
+    while (root)
+    {
+        if (root->pLeftChild == NULL)
+        {
+            printf("%c ", root->data);
+            root = root->pRightChild;
         }
-        else {
-            pre = current->pLeftChild;
-                while (pre->pRightChild && pre->pRightChild != current)
-                    pre = pre->pRightChild;
-            if (!pre->pRightChild) {
-                pre->pRightChild = current;
-                current = current->pLeftChild;
+        else
+        {
+            BinTreeNode *pre = root->pLeftChild;
+            while (pre->pRightChild && pre->pRightChild != root)
+                pre = pre->pRightChild;
+            if (!pre->pRightChild)
+            {
+                pre->pRightChild = root;
+                root = root->pLeftChild;
             }
-            else {
+            else
+            {
                 pre->pRightChild = NULL;
-                printf("%c ", current->data);
-                current = current->pRightChild;
+                printf("%c ", root->data);
+                root = root->pRightChild;
             }
         }
     }
@@ -383,25 +385,25 @@ void postOrder(BinTreeNode *root)
 void preOrder2(BinTreeNode *root)
 {
     BinTreeNode *s = NULL;
-      while(1)
+    int         done = 1;
+      while(done)
       {
           if(root)
           {
             printf("%c ",root->data);
             root->parent = s;
-            s = root;
+            s = root; // push
             root = root->pLeftChild;
           }
           else
           {
               if(s)
               {
-                root = s;
-                s = s->parent;
-                root = root->pRightChild;
+                root = s->pRightChild;
+                s = s->parent; // pop
               }
               else
-                break;
+                done = 0;
           }
       }
       printf("\n");
@@ -416,17 +418,16 @@ void inOrder2(BinTreeNode *root)
           if(root)
           {
               root->parent = s;
-              s = root;
+              s = root; // push
               root = root->pLeftChild;
           }
           else
           {
               if(s)
               {
-                root = s;
-                s = s->parent;
-                printf("%c ",root->data);
-                root = root->pRightChild;
+                printf("%c ",s->data);
+                root = s->pRightChild;
+                s = s->parent; //pop
               }
               else
                 break;
@@ -441,24 +442,23 @@ void postOrder2(BinTreeNode *root)
       BinTreeNode *s = NULL;
       do
       {
-          while(root)
+          while(root) // go to left
           {
             if(root->pRightChild)
             {
                 root->pRightChild->parent = s;
                 s = root->pRightChild;
-            }
-            root->parent = s;
-            s = root;
+            } // set as root->pRightChild as parent of root
+            root->parent = s; 
+            s = root; // push
             root = root->pLeftChild;
           }
           root = s;
-          s = s->parent;
-          if (root->pRightChild && s == root->pRightChild)
+          s = s->parent; // pop
+          if (root->pRightChild && s == root->pRightChild) // if (root has right child)
           {
-              s = s->parent;
-              root->parent = s;
-              s = root;
+              root->parent = s->parent;
+              s = root; // push
               root = root->pRightChild;
           }
           else
@@ -501,11 +501,11 @@ int main()
     t.data = '8';
     insertLeftChildNodeBT(tree->pRootNode->pLeftChild->pLeftChild,t);
     //preOrderTraversalBinTree(tree->pRootNode);printf("\n");
-    preOrder(tree->pRootNode);
+    printf("preorder  : ");preOrder(tree->pRootNode);
     //inOrderTraversalBinTree(tree->pRootNode);printf("\n");
-    inOrder(tree->pRootNode);
+    printf("inorder   : ");inOrder(tree->pRootNode);
     //postOrderTraversalBinTree(tree->pRootNode);printf("\n");
-    postOrder(tree->pRootNode);
+    printf("postorder : ");postOrder(tree->pRootNode);
     deleteBinTree2(&tree); //deleteBinTree(&tree);
 
     printf("==============================================\n");
@@ -583,8 +583,43 @@ int main()
     preOrder(tree->pRootNode);
     deleteBinTreeNode(tree->pRootNode->pLeftChild,tree);
     inOrder(tree->pRootNode);
-    tree = NULL;
     deleteBinTree2(&tree);
+    printf("==============================================\n");
+    t.data = 'A';
+    tree =  makeBinTree(t);
+    t.data = 'B';
+    insertLeftChildNodeBT(tree->pRootNode,t);
+    t.data = 'C';
+    insertRightChildNodeBT(tree->pRootNode,t);
+    t.data = 'D';
+    insertLeftChildNodeBT(tree->pRootNode->pLeftChild,t);
+    t.data = 'E';
+    insertRightChildNodeBT(tree->pRootNode->pLeftChild,t);
+    t.data = 'J';
+    insertLeftChildNodeBT(tree->pRootNode->pLeftChild->pRightChild,t);
+    t.data = 'F';
+    insertLeftChildNodeBT(tree->pRootNode->pRightChild,t);
+    t.data = 'K';
+    insertRightChildNodeBT(tree->pRootNode->pRightChild->pLeftChild,t);
+    t.data = 'G';
+    insertRightChildNodeBT(tree->pRootNode->pRightChild,t);
+    t.data = 'L';
+    insertLeftChildNodeBT(tree->pRootNode->pRightChild->pRightChild,t);
+    t.data = 'M';
+    insertRightChildNodeBT(tree->pRootNode->pRightChild->pRightChild,t);
+    t.data = 'H';
+    insertLeftChildNodeBT(tree->pRootNode->pLeftChild->pLeftChild,t);
+    t.data = 'I';
+    insertRightChildNodeBT(tree->pRootNode->pLeftChild->pLeftChild,t);
+    preOrderTraversalBinTree(tree->pRootNode);printf("\n");
+    preOrder(tree->pRootNode);
+    preOrder2(tree->pRootNode);
+    inOrderTraversalBinTree(tree->pRootNode);printf("\n");
+    inOrder(tree->pRootNode);
+    inOrder2(tree->pRootNode);
+    postOrderTraversalBinTree(tree->pRootNode);printf("\n");
+    postOrder(tree->pRootNode);
+    postOrder2(tree->pRootNode);
     deleteBinTree2(&tree);
     system("leaks a.out");
     return (0);
