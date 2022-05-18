@@ -143,7 +143,7 @@ void  deleteAllNode2(BinTreeNode *root)
 
 void deleteBinTree2(BinTree** pBinTree)
 {
-    if (pBinTree && *pBinTree)
+    if (*pBinTree && pBinTree) // *pBinTree == NULL  // pBinTree NULL
     {
         if ((*pBinTree)->pRootNode)
             deleteAllNode2((*pBinTree)->pRootNode);
@@ -151,6 +151,8 @@ void deleteBinTree2(BinTree** pBinTree)
         *pBinTree = NULL;
     }
 }
+
+//count node
 
 void dequeue_count(queue *q)
 {
@@ -531,6 +533,29 @@ void    levelorder(BinTreeNode *root)
     printf("\n");
 }
 
+//deepcopy
+BinTreeNode * deepcopy_recurssive(BinTreeNode *root)
+{
+    if (root == NULL)
+        return NULL;
+    BinTreeNode *node = malloc(sizeof(BinTreeNode));
+    node->data = root->data;
+    node->next = 0;
+    node->visited = 0;
+    node->parent = root;
+    node->pLeftChild = deepcopy_recurssive(root->pLeftChild);
+    node->pRightChild = deepcopy_recurssive(root->pRightChild);
+    return node;
+}
+
+void    deepcopy(BinTree **tree, BinTreeNode *root)
+{
+    *tree = malloc(sizeof(BinTree *));
+    (*tree)->pRootNode = deepcopy_recurssive(root);
+}
+
+//deepcopy without recurssive
+
 //level order without recurssive
 /*
     void levelorder2()
@@ -544,13 +569,14 @@ void    levelorder(BinTreeNode *root)
 is_binary
 */
 
-/*
 //rotate && arranagement
+/*
 */
 int main()
 {
     //init
     BinTree *tree;
+    BinTree *tree2;
     BinTreeNode t;
     t.next = 0;
     t.parent = 0;
@@ -582,7 +608,22 @@ int main()
     printf("levelorder : ");levelorder(tree->pRootNode);
     printf("height : %d\n",height(tree->pRootNode));
     printf("count : %d\n",count_node(tree->pRootNode));
+
+    //
+    deepcopy(&tree2, tree->pRootNode);
+    //deepcopy!
     deleteBinTree2(&tree); //deleteBinTree(&tree);
+    //
+
+    printf("preorder  : ");preOrder(tree2->pRootNode);
+    //inOrderTraversalBinTree(tree->pRootNode);printf("\n");
+    printf("inorder   : ");inOrder(tree2->pRootNode);
+    //postOrderTraversalBinTree(tree->pRootNode);printf("\n");
+    printf("postorder : ");postOrder(tree2->pRootNode);
+    printf("levelorder : ");levelorder(tree2->pRootNode);
+    printf("height : %d\n",height(tree2->pRootNode));
+    printf("count : %d\n",count_node(tree2->pRootNode));
+    deleteBinTree2(&tree2);
 
     printf("==============================================\n");
 
@@ -660,6 +701,10 @@ int main()
     deleteBinTreeNode(tree->pRootNode->pLeftChild,tree);
     inOrder(tree->pRootNode);
     deleteBinTree2(&tree);
+    /*
+    tree = 0;
+    deleteBinTree2(0);
+    */
     printf("==============================================\n");
     t.data = 'A';
     tree =  makeBinTree(t);
