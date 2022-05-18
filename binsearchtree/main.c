@@ -318,9 +318,9 @@ int main()
     insertBinSearchTree(tree, root);
     deleteBinSearchTreeNode(tree->pRootNode->pLeftChild, tree);
     deleteBinSearchTreeNode(tree->pRootNode, tree);
-    deleteBinSearchTreeNode(searchBinTreeNode(tree, 12), tree);
-    deleteBinSearchTreeNode(searchBinTreeNode(tree, 6), tree);
-    deleteBinSearchTreeNode(searchBinTreeNode(tree, 11), tree);
+    //deleteBinSearchTreeNode(searchBinTreeNode(tree, 12), tree);
+    //deleteBinSearchTreeNode(searchBinTreeNode(tree, 6), tree);
+    //deleteBinSearchTreeNode(searchBinTreeNode(tree, 11), tree);
     levelorder(tree->pRootNode);
     preOrder2B(tree->pRootNode);
     inOrderB(tree->pRootNode);
