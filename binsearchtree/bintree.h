@@ -9,6 +9,7 @@ typedef struct BinTreeNodeType
 	char data;
 	int	key;
 	int visited; //dummy data
+	int height;
 
 	struct BinTreeNodeType* pLeftChild;
 	struct BinTreeNodeType* pRightChild;

@@ -549,6 +549,7 @@ BinTreeNode * deepcopy_recurssive(BinTreeNode *root)
     return node;
 }
 
+//recurssive
 void    deepcopy(BinTree **tree, BinTreeNode *root)
 {
     *tree = malloc(sizeof(BinTree *));
