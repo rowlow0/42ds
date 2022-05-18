@@ -144,13 +144,41 @@ void  deleteAllNode2(BinTreeNode *root)
 
 void deleteBinTree2(BinTree** pBinTree)
 {
-    if (pBinTree && *pBinTree)
+    if (*pBinTree && pBinTree) // *pBinTree == NULL  // pBinTree NULL
     {
         if ((*pBinTree)->pRootNode)
             deleteAllNode2((*pBinTree)->pRootNode);
         free(*pBinTree);
         *pBinTree = NULL;
     }
+}
+
+//count node
+
+void dequeue_count(queue *q)
+{
+    q->front = q->front->next;
+    q->i--;
+}
+
+int count_node(BinTreeNode* pParentNode)
+{
+    int i = 0;
+    if (pParentNode)
+    {
+        queue *q = create(pParentNode);
+        while (!empty(q))
+        {
+            if (q->front->pLeftChild)
+                enqueue(q, q->front->pLeftChild);
+            if (q->front->pRightChild)
+                enqueue(q, q->front->pRightChild);
+            dequeue_count(q);
+            i++;
+        }
+        free(q);
+    }
+    return (i);
 }
 
 //delete node
@@ -482,6 +510,8 @@ int height(BinTreeNode *node)
     }
 }
 
+//traverse4
+
 void    printf_level(BinTreeNode *node, int level)
 {
     if (!node)
@@ -495,6 +525,7 @@ void    printf_level(BinTreeNode *node, int level)
     }
 }
 
+//recurssive
 void    levelorder(BinTreeNode *root)
 {
     int h = height(root);
@@ -502,6 +533,29 @@ void    levelorder(BinTreeNode *root)
         printf_level(root, i);
     printf("\n");
 }
+
+//deepcopy
+BinTreeNode * deepcopy_recurssive(BinTreeNode *root)
+{
+    if (root == NULL)
+        return NULL;
+    BinTreeNode *node = malloc(sizeof(BinTreeNode));
+    node->data = root->data;
+    node->next = 0;
+    node->visited = 0;
+    node->parent = root;
+    node->pLeftChild = deepcopy_recurssive(root->pLeftChild);
+    node->pRightChild = deepcopy_recurssive(root->pRightChild);
+    return node;
+}
+
+void    deepcopy(BinTree **tree, BinTreeNode *root)
+{
+    *tree = malloc(sizeof(BinTree *));
+    (*tree)->pRootNode = deepcopy_recurssive(root);
+}
+
+//deepcopy without recurssive
 
 //level order without recurssive
 /*
@@ -516,156 +570,6 @@ void    levelorder(BinTreeNode *root)
 is_binary
 */
 
-/*
 //rotate && arranagement
-*/
-
-
 /*
-int main()
-{
-    //init
-    BinTree *tree;
-    BinTreeNode t;
-    t.data = '1';
-    tree =  makeBinTree(t);
-    t.data = '2';
-    insertLeftChildNodeBT(tree->pRootNode,t);
-    t.data = '3';
-    insertRightChildNodeBT(tree->pRootNode,t);
-    t.data = '4';
-    insertLeftChildNodeBT(tree->pRootNode->pLeftChild,t);
-    t.data = '5';
-    insertRightChildNodeBT(tree->pRootNode->pLeftChild,t);
-    t.data = '6';
-    insertLeftChildNodeBT(tree->pRootNode->pRightChild,t);
-    t.data = '7';
-    insertRightChildNodeBT(tree->pRootNode->pRightChild,t);
-    t.data = '8';
-    insertLeftChildNodeBT(tree->pRootNode->pLeftChild->pLeftChild,t);
-    //preOrderTraversalBinTree(tree->pRootNode);printf("\n");
-    printf("preorder  : ");preOrder(tree->pRootNode);
-    //inOrderTraversalBinTree(tree->pRootNode);printf("\n");
-    printf("inorder   : ");inOrder(tree->pRootNode);
-    //postOrderTraversalBinTree(tree->pRootNode);printf("\n");
-    printf("postorder : ");postOrder(tree->pRootNode);
-    deleteBinTree2(&tree); //deleteBinTree(&tree);
-
-    printf("==============================================\n");
-
-    t.data = '1';
-    tree =  makeBinTree(t);
-    inOrder(tree->pRootNode);
-    inOrder2(tree->pRootNode);
-    deleteBinTreeNode(tree->pRootNode,tree);
-    deleteBinTree2(&tree);
-
-    printf("==============================================\n");
-    t.data = '1';
-    tree =  makeBinTree(t);
-    inOrder(tree->pRootNode);
-    t.data = '2';
-    insertLeftChildNodeBT(tree->pRootNode,t);
-    t.data = '3';
-    insertRightChildNodeBT(tree->pRootNode,t);
-    t.data = '4';
-    insertLeftChildNodeBT(tree->pRootNode->pLeftChild,t);
-    t.data = '5';
-    insertRightChildNodeBT(tree->pRootNode->pLeftChild,t);
-    t.data = '6';
-    insertLeftChildNodeBT(tree->pRootNode->pRightChild,t);
-    t.data = '7';
-    insertRightChildNodeBT(tree->pRootNode->pRightChild,t);
-    t.data = '8';
-    insertLeftChildNodeBT(tree->pRootNode->pLeftChild->pLeftChild,t);
-    deleteBinTreeNode(tree->pRootNode,tree);
-    deleteBinTreeNode(tree->pRootNode->pLeftChild,tree);
-    deleteBinTreeNode(tree->pRootNode->pLeftChild->pLeftChild,tree);
-
-    //preOrderTraversalBinTree(tree->pRootNode);printf("\n");
-    preOrder(tree->pRootNode);
-    //inOrderTraversalBinTree(tree->pRootNode);printf("\n");
-    inOrder(tree->pRootNode);
-    //postOrderTraversalBinTree(tree->pRootNode);printf("\n");
-    postOrder(tree->pRootNode);
-    deleteBinTree2(&tree);
-    printf("==============================================\n");
-    t.data = '1';
-    tree =  makeBinTree(t);
-    t.data = '2';
-    insertLeftChildNodeBT(tree->pRootNode,t);
-    t.data = '3';
-    insertRightChildNodeBT(tree->pRootNode,t);
-    t.data = '4';
-    insertLeftChildNodeBT(tree->pRootNode->pLeftChild,t);
-    t.data = '5';
-    insertRightChildNodeBT(tree->pRootNode->pLeftChild,t);
-    t.data = '6';
-    insertLeftChildNodeBT(tree->pRootNode->pRightChild,t);
-    t.data = '7';
-    insertRightChildNodeBT(tree->pRootNode->pRightChild,t);
-    t.data = '8';
-    insertLeftChildNodeBT(tree->pRootNode->pLeftChild->pLeftChild,t);
-    preOrderTraversalBinTree(tree->pRootNode);printf("\n");
-    preOrder(tree->pRootNode);
-    preOrder2(tree->pRootNode);
-    inOrderTraversalBinTree(tree->pRootNode);printf("\n");
-    inOrder(tree->pRootNode);
-    inOrder2(tree->pRootNode);
-    postOrderTraversalBinTree(tree->pRootNode);printf("\n");
-    postOrder(tree->pRootNode);
-    postOrder2(tree->pRootNode);
-    deleteBinTree2(&tree);
-    printf("==============================================\n");
-    t.data = '1';
-    tree =  makeBinTree(t);
-    t.data = '2';
-    insertLeftChildNodeBT(tree->pRootNode,t);
-    t.data = '3';
-    insertRightChildNodeBT(tree->pRootNode,t);
-    preOrder(tree->pRootNode);
-    deleteBinTreeNode(tree->pRootNode->pLeftChild,tree);
-    inOrder(tree->pRootNode);
-    deleteBinTree2(&tree);
-    printf("==============================================\n");
-    t.data = 'A';
-    tree =  makeBinTree(t);
-    t.data = 'B';
-    insertLeftChildNodeBT(tree->pRootNode,t);
-    t.data = 'C';
-    insertRightChildNodeBT(tree->pRootNode,t);
-    t.data = 'D';
-    insertLeftChildNodeBT(tree->pRootNode->pLeftChild,t);
-    t.data = 'E';
-    insertRightChildNodeBT(tree->pRootNode->pLeftChild,t);
-    t.data = 'J';
-    insertLeftChildNodeBT(tree->pRootNode->pLeftChild->pRightChild,t);
-    t.data = 'F';
-    insertLeftChildNodeBT(tree->pRootNode->pRightChild,t);
-    t.data = 'K';
-    insertRightChildNodeBT(tree->pRootNode->pRightChild->pLeftChild,t);
-    t.data = 'G';
-    insertRightChildNodeBT(tree->pRootNode->pRightChild,t);
-    t.data = 'L';
-    insertLeftChildNodeBT(tree->pRootNode->pRightChild->pRightChild,t);
-    t.data = 'M';
-    insertRightChildNodeBT(tree->pRootNode->pRightChild->pRightChild,t);
-    t.data = 'H';
-    insertLeftChildNodeBT(tree->pRootNode->pLeftChild->pLeftChild,t);
-    t.data = 'I';
-    insertRightChildNodeBT(tree->pRootNode->pLeftChild->pLeftChild,t);
-    preOrderTraversalBinTree(tree->pRootNode);printf("\n");
-    preOrder(tree->pRootNode);
-    preOrder2(tree->pRootNode);
-    inOrderTraversalBinTree(tree->pRootNode);printf("\n");
-    inOrder(tree->pRootNode);
-    inOrder2(tree->pRootNode);
-    postOrderTraversalBinTree(tree->pRootNode);printf("\n");
-    postOrder(tree->pRootNode);
-    postOrder2(tree->pRootNode);
-    deleteBinTree2(&tree);
-    system("leaks a.out");
-    return (0);
-}
-}
 */
