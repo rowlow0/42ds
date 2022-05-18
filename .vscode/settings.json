@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "ios": "c",
-        "iterator": "c"
+        "iterator": "c",
+        "__node_handle": "c"
     }
 }

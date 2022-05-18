@@ -16,10 +16,23 @@ BinTreeNode *rightRotate(BinTreeNode *y, BinTree *tree)
     y -> pLeftChild = t;
     y->height = height(y);
     x->height = height(x);
+    if(t)
+        t->parent = y;
+    x->parent = y->parent;
+    y->parent = x;
     if(tree->pRootNode->key == y->key)
         tree->pRootNode = x;
     return x;
 }
+/*
+  y
+ x
+  t
+
+ x
+  y
+ t 
+*/
 
 BinTreeNode *leftRotate(BinTreeNode *x, BinTree *tree)
 {
@@ -29,10 +42,24 @@ BinTreeNode *leftRotate(BinTreeNode *x, BinTree *tree)
     x->pRightChild = t;
     x->height = height(x);
     y->height = height(y);
+    if (t)
+        t->parent = x;
+    y->parent = x->parent;
+    x->parent = y;
     if(tree->pRootNode->key == x->key)
         tree->pRootNode = y;
     return y;
 }
+
+/*
+  x
+   y
+  t
+
+  y
+ x
+  t 
+*/
 
 BinTree* makeBinSearchTree(BinTreeNode rootNode)
 {
@@ -59,31 +86,37 @@ BinTreeNode	*searchBinTreeNode(BinTree *tree, int key)
 	}
 	return result;
 }
-
-BinTreeNode *insertUtiRecurssive(BinTreeNode *root, int key, BinTreeNode *root2, BinTree *tree)
+//https://www.geeksforgeeks.org/avl-tree-set-1-insertion/
+BinTreeNode *insertUtiRecurssive(BinTreeNode *root, BinTreeNode element, BinTree *tree, BinTreeNode *parent)
 {
     if(!root)
-        return (root2);
-    root->height = height(root);
-    if (key < root->key)
-        root = insertUtiRecurssive(root->pLeftChild, key, root, tree);
+    {
+        BinTreeNode *tmp = calloc(1, sizeof(BinTreeNode));
+        tmp->data = element.data;
+        tmp->key = element.key;
+        tmp->parent = parent;
+        return (tmp);
+    }
+    if (element.key < root->key)
+        root->pLeftChild = insertUtiRecurssive(root->pLeftChild, element, tree, root);
     else
-        root = insertUtiRecurssive(root->pRightChild, key, root, tree);
+        root->pRightChild = insertUtiRecurssive(root->pRightChild, element, tree, root);
+    root->height = height(root);
     int balance = getBalance(root);
     // Left Left Case
-    if (balance > 1 && key < root->pLeftChild->key)
+    if (balance > 1 && element.key < root->pLeftChild->key)
         root =rightRotate(root, tree);
     // Right Right Case
-    if (balance < -1 && key > root->pRightChild->key)
+    if (balance < -1 && element.key > root->pRightChild->key)
         root = leftRotate(root, tree);
     // Left Right Case
-    if (balance > 1 && key > root->pLeftChild->key)
+    if (balance > 1 && element.key > root->pLeftChild->key)
     {
         root->pLeftChild =  leftRotate(root->pLeftChild, tree);
         root = rightRotate(root, tree);
     }
     // Right Left Case
-    if (balance < -1 && key < root->pRightChild->key)
+    if (balance < -1 && element.key < root->pRightChild->key)
     {
         root->pRightChild = rightRotate(root->pRightChild, tree);
         root = leftRotate(root, tree);
@@ -94,19 +127,7 @@ BinTreeNode *insertUtiRecurssive(BinTreeNode *root, int key, BinTreeNode *root2,
 BinTreeNode *insertBinSearchTree(BinTree *tree, BinTreeNode element)
 {
     if (!searchBinTreeNode(tree, element.key))
-    {
-        BinTreeNode *pParentNode = insertUtiRecurssive(tree->pRootNode, element.key, 0, tree);
-        BinTreeNode *tmp = calloc(1, sizeof(BinTreeNode));
-        tmp->data = element.data;
-        tmp->key = element.key;
-        tmp->parent = pParentNode;
-        if(pParentNode->key >element.key)
-            pParentNode->pLeftChild = tmp;
-        else
-            pParentNode->pRightChild = tmp;
-        
-        return (tmp);
-    }
+        return (insertUtiRecurssive(tree->pRootNode, element, tree, 0));
     else
         return (NULL);
 }
@@ -137,7 +158,7 @@ void deleteBinSearchTreeNode(BinTreeNode* pNode, BinTree *tree)
     else if (pNode->pLeftChild && pNode->pRightChild)
     {
         BinTreeNode *t = find_minimum_search(pNode->pRightChild);
-        pNode->data = t->data;
+        pNode->key = t->key;
         if(t != pNode->pRightChild)
         {
             t->parent->pLeftChild = 0;
@@ -154,11 +175,11 @@ void deleteBinSearchTreeNode(BinTreeNode* pNode, BinTree *tree)
     {
         BinTreeNode* next = pNode->pLeftChild ? pNode->pLeftChild : pNode->pRightChild;
         if (pNode->parent == 0)
-            tree->pRootNode->data = next->data;
+            tree->pRootNode->key = next->key;
         else if(pNode->parent->pLeftChild == pNode)
-            pNode->data = next->data;
+            pNode->key = next->key;
         else
-            pNode->data = next->data;
+            pNode->key = next->key;
         pNode->pLeftChild = 0;
         pNode->pRightChild = 0;
         free(next);
@@ -283,6 +304,23 @@ int main()
     insertBinSearchTree(tree, root);
     root.key = 6;
     insertBinSearchTree(tree, root);
+    root.key = 7;
+    insertBinSearchTree(tree, root);
+    root.key = 8;
+    insertBinSearchTree(tree, root);
+    root.key = 9;
+    insertBinSearchTree(tree, root);
+    root.key = 10;
+    insertBinSearchTree(tree, root);
+    root.key = 11;
+    insertBinSearchTree(tree, root);
+    root.key = 12;
+    insertBinSearchTree(tree, root);
+    deleteBinSearchTreeNode(tree->pRootNode->pLeftChild, tree);
+    deleteBinSearchTreeNode(tree->pRootNode, tree);
+    deleteBinSearchTreeNode(searchBinTreeNode(tree, 12), tree);
+    deleteBinSearchTreeNode(searchBinTreeNode(tree, 6), tree);
+    deleteBinSearchTreeNode(searchBinTreeNode(tree, 11), tree);
     levelorder(tree->pRootNode);
     preOrder2B(tree->pRootNode);
     inOrderB(tree->pRootNode);
