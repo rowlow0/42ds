@@ -1,9 +1,10 @@
 #include "bintree.h"
 
+//malloc
 BinTree* makeBinTree(BinTreeNode rootNode)
 {
     BinTree *newTree;
-    newTree = malloc(sizeof(BinTree));
+    newTree = malloc(sizeof(BinTree *));
     newTree->pRootNode = malloc(sizeof(BinTreeNode));
     newTree->pRootNode->data = rootNode.data;
     newTree->pRootNode->pLeftChild = 0;
@@ -40,18 +41,14 @@ BinTreeNode* insertLeftChildNodeBT(BinTreeNode* pParentNode, BinTreeNode element
     return (pParentNode->pLeftChild);
 }
 
-//malloc
+//malloc2
 BinTreeNode* insertRightChildNodeBT(BinTreeNode* pParentNode, BinTreeNode element)
 {
     if (!pParentNode || pParentNode->pRightChild)
         return (NULL);
     pParentNode->pRightChild = malloc(sizeof(BinTreeNode));
-    pParentNode->pRightChild->data = element.data;
+    *(pParentNode->pRightChild) = element;
     pParentNode->pRightChild->parent = pParentNode;
-    pParentNode->pRightChild->pLeftChild = 0;
-    pParentNode->pRightChild->pRightChild = 0;
-    pParentNode->pRightChild->next = 0;
-    pParentNode->pRightChild->visited = 0;
     return (pParentNode->pRightChild);
 }
 
@@ -232,7 +229,7 @@ void deleteBinTreeNode2(BinTreeNode** pNode, char c, BinTree *root)
 void preOrderTraversalBinTree(BinTreeNode *root)
 {
     if (root == NULL)
-        return;
+        return ;
     printf("%c ", root->data);
     preOrderTraversalBinTree(root->pLeftChild);
     preOrderTraversalBinTree(root->pRightChild);
@@ -399,9 +396,8 @@ void preOrder2(BinTreeNode *root)
           {
               if(s)
               {
-                root = s;
+                root = s->pRightChild;
                 s = s->parent; // pop
-                root = root->pRightChild;
               }
               else
                 done = 0;
@@ -413,23 +409,22 @@ void preOrder2(BinTreeNode *root)
 //stack
 void inOrder2(BinTreeNode *root)
 {
-      BinTreeNode *s = NULL;
+      BinTreeNode *cursor = NULL;
       while(1)
       {
           if(root)
           {
-              root->parent = s;
-              s = root; // push
+              root->parent = cursor;
+              cursor = root; // push
               root = root->pLeftChild;
           }
           else
           {
-              if(s)
+              if(cursor)
               {
-                root = s;
-                s = s->parent; //pop
-                printf("%c ",root->data);
-                root = root->pRightChild;
+                printf("%c ",cursor->data);
+                root = cursor->pRightChild;
+                cursor = cursor->parent; //pop
               }
               else
                 break;
@@ -472,6 +467,7 @@ void postOrder2(BinTreeNode *root)
       printf("\n");
 }
 
+
 // for balance of tree (AVL)
 /*
 is_binary
@@ -480,6 +476,8 @@ is_binary
 /*
 //rotate && arranagement
 */
+
+
 /*
 int main()
 {

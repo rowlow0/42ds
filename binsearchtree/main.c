@@ -51,7 +51,7 @@ BinTreeNode *insertBinSearchTree(BinTree *tree, BinTreeNode element)
         BinTreeNode *pParentNode = insertUtiRecurssive(tree->pRootNode, element.key, 0);
         BinTreeNode *tmp = calloc(1, sizeof(BinTreeNode));
         tmp->data = element.data;
-        tmp->key = element.data;
+        tmp->key = element.key;
         tmp->parent = pParentNode;
         if(pParentNode->key >element.key)
             pParentNode->pLeftChild = tmp;
@@ -61,13 +61,6 @@ BinTreeNode *insertBinSearchTree(BinTree *tree, BinTreeNode element)
     }
     else
         return (NULL);
-	// 같은 노드가 있는지 search
-	// 있다면 printf("fail to insert : same key\n");
-	// key < element->key
-	// 	search(element->left, key);
-	// else
-	// 	search(element->right, key);
-	// return;
 }
 
 static BinTreeNode* find_minimum_search(BinTreeNode* pNode)
@@ -224,6 +217,12 @@ void postOrder2B(BinTreeNode *root)
 int main()
 {
     BinTreeNode root;
+    root.data = 0;
+    root.next = 0;
+    root.parent = 0;
+    root.visited = 0;
+    root.pRightChild = 0;
+    root.pLeftChild = 0;
     root.key = 10;
     BinTree *tree = makeBinSearchTree(root);
     root.key = 15;
@@ -236,7 +235,7 @@ int main()
     insertBinSearchTree(tree, root);
     root.key = -5;
     insertBinSearchTree(tree, root);
-        preOrder2B(tree->pRootNode);
+    preOrder2B(tree->pRootNode);
     inOrderB(tree->pRootNode);
     postOrder2B(tree->pRootNode);
     deleteBinTree2(&tree);
