@@ -62,43 +62,33 @@ BinTreeNode	*searchBinTreeNode(BinTree *tree, int key)
 
 BinTreeNode *insertUtiRecurssive(BinTreeNode *root, int key, BinTreeNode *root2, BinTree *tree)
 {
-    BinTreeNode * r = 0;
     if(!root)
         return (root2);
+    root->height = height(root);
+    if (key < root->key)
+        root = insertUtiRecurssive(root->pLeftChild, key, root, tree);
     else
+        root = insertUtiRecurssive(root->pRightChild, key, root, tree);
+    int balance = getBalance(root);
+    // Left Left Case
+    if (balance > 1 && key < root->pLeftChild->key)
+        root =rightRotate(root, tree);
+    // Right Right Case
+    if (balance < -1 && key > root->pRightChild->key)
+        root = leftRotate(root, tree);
+    // Left Right Case
+    if (balance > 1 && key > root->pLeftChild->key)
     {
-        root->height = height(root);
-        int balance = getBalance(root);
-    
-        // If this root2 becomes unbalanced, then
-        // there are 4 cases
-    
-        // Left Left Case
-        if (balance > 1 && key < root->pLeftChild->key)
-            root =rightRotate(root, tree);
-    
-        // Right Right Case
-        if (balance < -1 && key > root->pRightChild->key)
-            root = leftRotate(root, tree);
-    
-        // Left Right Case
-        if (balance > 1 && key > root->pLeftChild->key)
-        {
-            root->pLeftChild =  leftRotate(root->pLeftChild, tree);
-            root = rightRotate(root, tree);
-        }
-        // Right Left Case
-        if (balance < -1 && key < root->pRightChild->key)
-        {
-            root->pRightChild = rightRotate(root->pRightChild, tree);
-            root = leftRotate(root, tree);
-        }
+        root->pLeftChild =  leftRotate(root->pLeftChild, tree);
+        root = rightRotate(root, tree);
     }
-        if (key < root->key)
-            r = insertUtiRecurssive(root->pLeftChild, key, root, tree);
-        else
-            r = insertUtiRecurssive(root->pRightChild, key, root, tree);
-    return r;
+    // Right Left Case
+    if (balance < -1 && key < root->pRightChild->key)
+    {
+        root->pRightChild = rightRotate(root->pRightChild, tree);
+        root = leftRotate(root, tree);
+    }
+    return root;
 }
 
 BinTreeNode *insertBinSearchTree(BinTree *tree, BinTreeNode element)
@@ -114,6 +104,7 @@ BinTreeNode *insertBinSearchTree(BinTree *tree, BinTreeNode element)
             pParentNode->pLeftChild = tmp;
         else
             pParentNode->pRightChild = tmp;
+        
         return (tmp);
     }
     else
