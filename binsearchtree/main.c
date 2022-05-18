@@ -17,7 +17,6 @@ BinTree* makeBinSearchTree(BinTreeNode rootNode)
     return(newTree);
 }
 
-
 BinTreeNode	*searchBinTreeNode(BinTree *tree, int key)
 {
 	BinTreeNode	* result = tree->pRootNode;
@@ -223,22 +222,24 @@ int main()
     root.visited = 0;
     root.pRightChild = 0;
     root.pLeftChild = 0;
-    root.key = 10;
+    root.key = 1;
     BinTree *tree = makeBinSearchTree(root);
-    root.key = 15;
+    root.key = 2;
     insertBinSearchTree(tree, root);
-    root.key = 20;
+    root.key = 3;
+    insertBinSearchTree(tree, root);
+    root.key = 4;
     insertBinSearchTree(tree, root);
     root.key = 5;
     insertBinSearchTree(tree, root);
-    root.key = 0;
+    root.key = 6;
     insertBinSearchTree(tree, root);
-    root.key = -5;
-    insertBinSearchTree(tree, root);
+    levelorder(tree->pRootNode);
     preOrder2B(tree->pRootNode);
     inOrderB(tree->pRootNode);
     postOrder2B(tree->pRootNode);
     deleteBinTree2(&tree);
+    printf("=======================\n");
     system("leaks a.out");
     return (0);
 }

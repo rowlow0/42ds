@@ -467,6 +467,49 @@ void postOrder2(BinTreeNode *root)
       printf("\n");
 }
 
+int height(BinTreeNode *node)
+{
+    if (!node)
+        return 0;
+    else
+    {
+        int lheight = height(node->pLeftChild);
+        int rheight = height(node->pRightChild);
+        if (lheight > rheight)
+            return (lheight + 1);
+        else
+            return (rheight + 1);
+    }
+}
+
+void    printf_level(BinTreeNode *node, int level)
+{
+    if (!node)
+        return ;
+    if (level == 1)
+        printf("%d ", node->key);
+    else if (level > 1)
+    {
+        printf_level(node->pLeftChild, level - 1);
+        printf_level(node->pRightChild, level - 1);
+    }
+}
+
+void    levelorder(BinTreeNode *root)
+{
+    int h = height(root);
+    for (int i = 1; i <= h; i++)
+        printf_level(root, i);
+    printf("\n");
+}
+
+//level order without recurssive
+/*
+    void levelorder2()
+    {
+
+    }
+*/
 
 // for balance of tree (AVL)
 /*
