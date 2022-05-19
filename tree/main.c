@@ -228,8 +228,6 @@ void deleteBinTreeNode(BinTreeNode* pNode, BinTree *tree)
         BinTreeNode* next = pNode->pLeftChild ? pNode->pLeftChild : pNode->pRightChild;
         if (pNode->parent == 0)
             tree->pRootNode->data = next->data;
-        else if(pNode->parent->pLeftChild == pNode)
-            pNode->data = next->data;
         else
             pNode->data = next->data;
         pNode->pLeftChild = 0;
@@ -611,6 +609,7 @@ int main()
 
     //
     deepcopy(&tree2, tree->pRootNode);
+    printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
     //deepcopy!
     deleteBinTree2(&tree); //deleteBinTree(&tree);
     //
