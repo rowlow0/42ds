@@ -7,22 +7,13 @@ BinTree* makeBinTree(BinTreeNode rootNode)
     newTree = malloc(sizeof(BinTree *));
     newTree->pRootNode = malloc(sizeof(BinTreeNode));
     newTree->pRootNode->data = rootNode.data;
-    newTree->pRootNode->pLeftChild = 0;
-    newTree->pRootNode->pRightChild = 0;
+    newTree->pRootNode->pLeftChild = NULL; //
+    newTree->pRootNode->pRightChild = NULL; //
     newTree->pRootNode->next = 0;
     newTree->pRootNode->visited = 0;
-    newTree->pRootNode->parent = 0;
+    newTree->pRootNode->parent = NULL;
     return(newTree);
 }
-
-/*
-BinTreeNode* getRootNodeBT(BinTree* pBinTree)
-{
-    if(pBinTree && pBinTree->pRootNode)
-        return (pBinTree->pRootNode);
-    return (NULL);
-}
-*/
 
 //calloc
 BinTreeNode* insertLeftChildNodeBT(BinTreeNode* pParentNode, BinTreeNode element)

@@ -1,4 +1,4 @@
-#include	"bin_search_tree.h"
+//#include	"bin_search_tree.h"
 #include    "bintree.c"
 
 int getBalance(BinTreeNode *n)
@@ -24,6 +24,7 @@ BinTreeNode *rightRotate(BinTreeNode *y, BinTree *tree)
         tree->pRootNode = x;
     return x;
 }
+
 /*
   y
  x
@@ -105,21 +106,21 @@ BinTreeNode *insertUtiRecurssive(BinTreeNode *root, BinTreeNode element, BinTree
     int balance = getBalance(root);
     // Left Left Case
     if (balance > 1 && element.key < root->pLeftChild->key)
-        root =rightRotate(root, tree);
+        return rightRotate(root, tree);
     // Right Right Case
     if (balance < -1 && element.key > root->pRightChild->key)
-        root = leftRotate(root, tree);
+        return leftRotate(root, tree);
     // Left Right Case
     if (balance > 1 && element.key > root->pLeftChild->key)
     {
         root->pLeftChild =  leftRotate(root->pLeftChild, tree);
-        root = rightRotate(root, tree);
+        return rightRotate(root, tree);
     }
     // Right Left Case
     if (balance < -1 && element.key < root->pRightChild->key)
     {
         root->pRightChild = rightRotate(root->pRightChild, tree);
-        root = leftRotate(root, tree);
+        return leftRotate(root, tree);
     }
     return root;
 }
@@ -127,7 +128,7 @@ BinTreeNode *insertUtiRecurssive(BinTreeNode *root, BinTreeNode element, BinTree
 BinTreeNode *insertBinSearchTree(BinTree *tree, BinTreeNode element)
 {
     if (!searchBinTreeNode(tree, element.key))
-        return (insertUtiRecurssive(tree->pRootNode, element, tree, 0));
+        return (insertUtiRecurssive(tree->pRootNode, element, tree, NULL));
     else
         return (NULL);
 }
@@ -147,11 +148,11 @@ void deleteBinSearchTreeNode(BinTreeNode* pNode, BinTree *tree)
     else if (!pNode->pLeftChild && !pNode->pRightChild)
     {
         if (pNode == tree->pRootNode)
-            tree->pRootNode = 0;
+            tree->pRootNode = NULL;
         else if (pNode->parent->pLeftChild == pNode)
-            pNode->parent->pLeftChild = 0;
+            pNode->parent->pLeftChild = NULL;
         else if (pNode->parent->pRightChild == pNode)
-            pNode->parent->pRightChild = 0;
+            pNode->parent->pRightChild = NULL;
         free(pNode);
     }
         //two
@@ -161,27 +162,25 @@ void deleteBinSearchTreeNode(BinTreeNode* pNode, BinTree *tree)
         pNode->key = t->key;
         if(t != pNode->pRightChild)
         {
-            t->parent->pLeftChild = 0;
+            t->parent->pLeftChild = NULL;
             free(t);
         }
         else
         {
             free(t);
-            pNode->pRightChild = 0;
+            pNode->pRightChild = NULL;
         }
     }
         //one
     else
     {
         BinTreeNode* next = pNode->pLeftChild ? pNode->pLeftChild : pNode->pRightChild;
-        if (pNode->parent == 0)
+        if (pNode->parent == NULL)
             tree->pRootNode->key = next->key;
-        else if(pNode->parent->pLeftChild == pNode)
-            pNode->key = next->key;
         else
             pNode->key = next->key;
-        pNode->pLeftChild = 0;
-        pNode->pRightChild = 0;
+        pNode->pLeftChild = NULL;
+        pNode->pRightChild = NULL;
         free(next);
     }
 }
@@ -286,11 +285,11 @@ int main()
 {
     BinTreeNode root;
     root.data = 0;
-    root.next = 0;
-    root.parent = 0;
+    root.next = NULL;
+    root.parent = NULL;
     root.visited = 0;
-    root.pRightChild = 0;
-    root.pLeftChild = 0;
+    root.pRightChild = NULL;
+    root.pLeftChild = NULL;
     BinTree *tree;
     root.key = 1;
     tree = makeBinSearchTree(root);
@@ -318,9 +317,9 @@ int main()
     insertBinSearchTree(tree, root);
     deleteBinSearchTreeNode(tree->pRootNode->pLeftChild, tree);
     deleteBinSearchTreeNode(tree->pRootNode, tree);
-    //deleteBinSearchTreeNode(searchBinTreeNode(tree, 12), tree);
-    //deleteBinSearchTreeNode(searchBinTreeNode(tree, 6), tree);
-    //deleteBinSearchTreeNode(searchBinTreeNode(tree, 11), tree);
+    deleteBinSearchTreeNode(searchBinTreeNode(tree, 12), tree);
+    deleteBinSearchTreeNode(searchBinTreeNode(tree, 6), tree);
+    deleteBinSearchTreeNode(searchBinTreeNode(tree, 11), tree);
     levelorder(tree->pRootNode);
     preOrder2B(tree->pRootNode);
     inOrderB(tree->pRootNode);
