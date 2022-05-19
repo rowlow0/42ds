@@ -1,4 +1,4 @@
-//#include	"bin_search_tree.h"
+#include	"bin_search_tree.h"
 #include    "bintree.c"
 
 int getBalance(BinTreeNode *n)
