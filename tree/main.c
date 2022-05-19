@@ -157,7 +157,7 @@ void deleteBinTree2(BinTree** pBinTree)
 void dequeue_count(queue *q)
 {
     q->front = q->front->next;
-    q->i--;
+    (q->i)--;
 }
 
 int count_node(BinTreeNode* pParentNode)
@@ -443,7 +443,7 @@ void inOrder2(BinTreeNode *root)
               cursor = root; // push
               root = root->pLeftChild;
           }
-          else
+          else // s 1 root 2
           {
               if(cursor)
               {
@@ -457,6 +457,19 @@ void inOrder2(BinTreeNode *root)
       }
       printf("\n");
 }
+/*
+
+cursor 8 root 0
+cursor 4 root 0
+cursor 2 root 0
+cursor 1 root 5
+cursor 5 root 0
+cursor 1 root 3
+cursor 3 root 6
+cursor 6 root 0
+cursor 7 root 0
+
+*/
 
 //stack
 void postOrder2(BinTreeNode *root)
