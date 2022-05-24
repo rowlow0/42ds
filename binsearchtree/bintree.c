@@ -7,8 +7,8 @@ BinTree* makeBinTree(BinTreeNode rootNode)
     newTree = malloc(sizeof(BinTree *));
     newTree->pRootNode = malloc(sizeof(BinTreeNode));
     newTree->pRootNode->data = rootNode.data;
-    newTree->pRootNode->pLeftChild = NULL; //
-    newTree->pRootNode->pRightChild = NULL; //
+    newTree->pRootNode->pLeftChild = NULL;
+    newTree->pRootNode->pRightChild = NULL;
     newTree->pRootNode->next = 0;
     newTree->pRootNode->visited = 0;
     newTree->pRootNode->parent = NULL;
@@ -465,7 +465,7 @@ void postOrder2(BinTreeNode *root)
                 root->pRightChild->parent = s;
                 s = root->pRightChild;
             } // set as root->pRightChild as parent of root
-            root->parent = s; 
+            root->parent = s;
             s = root; // push
             root = root->pLeftChild;
           }
