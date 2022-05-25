@@ -1,6 +1,9 @@
 #ifndef _GRAPH_LINKEDLIST_
 #define _GRAPH_LINKEDLIST_
 
+#include "stdio.h"
+#include "stdlib.h"
+
 typedef struct GraphVertexType
 {
 	int vertexID;	//
@@ -26,7 +29,7 @@ ListNode* getLLElement(LinkedList* pList, int position);
 
 void clearLinkedList(LinkedList* pList);
 int getLinkedListLength(LinkedList* pList);
-void deleteLinkedList(LinkedList* pList);
+void deleteLinkedList(LinkedList** pList);
 #endif
 
 #ifndef _COMMON_LIST_DEF_

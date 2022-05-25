@@ -1,6 +1,9 @@
 #ifndef _GRAPH_ADJMATRIX_
 #define _GRAPH_ADJMATRIX_
 
+#include "stdio.h"
+#include "stdlib.h"
+
 typedef struct ArrayGraphType
 {
 	int maxVertexCount;		//
@@ -8,11 +11,12 @@ typedef struct ArrayGraphType
 	int graphType;			// Undirected, 2-Directed
 	int **ppAdjEdge;		// array
 	int *pVertex;			// array
+	int front;
+	int rear;
 } ArrayGraph;
 
 //create
 ArrayGraph* createArrayGraph(int maxVertexCount);
-ArrayGraph* createArrayDirectedGraph(int maxVertexCount);
 
 //delete
 void deleteArrayGraph(ArrayGraph** pGraph);
@@ -52,6 +56,6 @@ void displayArrayGraph(ArrayGraph* pGraph);
 #define TRUE				1
 #define FALSE				0
 
-#define GRAPH_UNDIRECTED	1
-#define GRAPH_DIRECTED		2
+#define GRAPH_UNDIRECTED	1 // not arrow
+#define GRAPH_DIRECTED		2 // arrow
 #endif
