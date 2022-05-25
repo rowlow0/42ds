@@ -16,7 +16,7 @@ typedef struct ArrayGraphType
 } ArrayGraph;
 
 //create
-ArrayGraph* createArrayGraph(int maxVertexCount);
+ArrayGraph* createArrayGraph(int maxVertexCount, int type);
 
 //delete
 void deleteArrayGraph(ArrayGraph** pGraph);
