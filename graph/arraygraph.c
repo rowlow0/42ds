@@ -11,6 +11,7 @@ ArrayGraph* createArrayUnDirectedGraph(int maxVertexCount, int type)
     new->maxVertexCount = maxVertexCount;
     new->ppAdjEdge = malloc(sizeof(int **) * maxVertexCount);
     new->pVertex = malloc(sizeof(int *) * maxVertexCount);
+    return new;
 }
 
 //delete
@@ -42,30 +43,31 @@ int isEmptyAG(ArrayGraph* pGraph)
     return !pGraph || !pGraph->currentVertexCount;
 }
 
-//add vertex
-int addVertexAG(ArrayGraph* pGraph, int vertexID)
+//search vertex
+int checkVertexValid(ArrayGraph* pGraph, int vertexID)
 {
-    if(pGraph && pGraph->pVertex && pGraph->currentVertexCount < pGraph->maxVertexCount)
-    {
-        pGraph->pVertex[pGraph->rear++] = vertexID;
-        return 1;
-    }
+    //if (pGraph && pGraph->pVertex)
+    for (int i = pGraph->front, j = 0; j < pGraph->currentVertexCount; j++)
+        if(pGraph->pVertex[i++ / (pGraph->maxVertexCount + 1)] == vertexID)
+            return 1;
     return 0;
 }
 
-//is in array
-static int isValidId(ArrayGraph* pGraph, int vertex)
+//add vertex
+int addVertexAG(ArrayGraph* pGraph, int vertexID)
 {
-    for(int i = 0; i < pGraph->currentVertexCount; i++)
-        if(pGraph->pVertex[i] == vertex)
-            return 1;
+    if(pGraph && pGraph->pVertex && pGraph->currentVertexCount < pGraph->maxVertexCount && !checkVertexValid(pGraph, vertexID))
+    {
+        pGraph->ppAdjEdge[pGraph->currentVertexCount] = calloc(sizeof(int *), sizeof(int *) * pGraph->maxVertexCount);
+        return pGraph->pVertex[pGraph->rear++] = vertexID;
+    }
     return 0;
 }
 
 //add edge
 int addEdgeAG(ArrayGraph* pGraph, int fromVertexID, int toVertexID)
 {
-    if(pGraph && pGraph->pVertex && pGraph->graphType == 1)
+    if(pGraph && pGraph->pVertex && checkVertexValid(pGraph, fromVertexID) && checkVertexValid(pGraph, toVertexID))
     {
         return 1;
     }
@@ -78,16 +80,6 @@ int addEdgewithWeightAG(ArrayGraph* pGraph, int fromVertexID, int toVertexID, in
     {
         return 1;
     }
-    return 0;
-}
-
-//is vertex ok
-int checkVertexValid(ArrayGraph* pGraph, int vertexID)
-{
-    if (pGraph && pGraph->pVertex)
-        for(int i = 0; i < pGraph->currentVertexCount; i++)
-            if(pGraph->pVertex[i] == vertexID)
-                return 1;
     return 0;
 }
 
@@ -125,13 +117,20 @@ void displayArrayGraph(ArrayGraph* pGraph)
         printf("type : undirected\n");
     else
         printf("type : directed\n");
-    printf("max count : %d\n",pGraph->maxVertexCount);
-    printf("current count : %d\n",pGraph->currentVertexCount);
-    printf("front : \n", pGraph->front);
-    printf("rear : \n", pGraph->rear);   
+    printf("max count : %d\n", pGraph->maxVertexCount);
+    printf("current count : %d\n", pGraph->currentVertexCount);
+    printf("front : %d\n", pGraph->front);
+    printf("rear : %d\n", pGraph->rear);   
     printf("vetex : ");
     for (int i = pGraph->front, j = 0; j < pGraph->currentVertexCount; j++)
         printf("%d ",pGraph->pVertex[i++ / (pGraph->maxVertexCount + 1)]);
+    printf("vetex edge map: \n");
+    for (int i = 0; i < pGraph->currentVertexCount; i++)
+    {
+        for (int j = 0; j < pGraph->maxVertexCount; j++)
+            printf("%d ", pGraph->ppAdjEdge[i][j]);
+        printf("\n");
+    }
     printf("\n");
 }
 
