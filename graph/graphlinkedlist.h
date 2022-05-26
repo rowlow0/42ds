@@ -23,9 +23,9 @@ typedef struct LinkedListType
 } LinkedList;
 
 LinkedList* createLinkedList();
-int addLLElement(LinkedList* pList, int position, ListNode element);
-int removeLLElement(LinkedList* pList, int position);
-ListNode* getLLElement(LinkedList* pList, int position);
+int addLLElement(LinkedList* pList, int index, ListNode element);
+int removeLLElement(LinkedList* pList, int index);
+ListNode* getLLElement(LinkedList* pList, int index);
 
 void clearLinkedList(LinkedList* pList);
 int getLinkedListLength(LinkedList* pList);

@@ -1,4 +1,4 @@
-#include "arraygraph.h"
+#include "arraygraph.h" //queue
 
 //create
 ArrayGraph* createArrayGraph(int maxVertexCount, int type)
@@ -42,11 +42,13 @@ void deleteArrayGraph(ArrayGraph** pGraph)
     }
 }
 
+/*
 //is empty
 int isEmptyAG(ArrayGraph* pGraph)
 {
     return !pGraph || !pGraph->currentVertexCount;
 }
+*/
 
 //search vertex
 int checkVertexValid(ArrayGraph* pGraph, int vertexID)
