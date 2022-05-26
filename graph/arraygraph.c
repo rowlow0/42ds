@@ -1,4 +1,9 @@
 #include "arraygraph.h" //queue
+/*
+while..
+weight && directed
+space 2d -> 1d
+*/
 
 //create
 ArrayGraph* createArrayGraph(int maxVertexCount, int type)
@@ -254,25 +259,25 @@ int main()
     addEdgeAG(g, 4, 15);
     addEdgeAG(g, 4, 21);
     addEdgeAG(g, 4, 30);
-    addEdgeAG(g, 4, 6);
+    addEdgeAG(g, 4, 6); // add edge and vertex
     displayArrayGraph(g);
     removeEdgeAG(g, 15, 1);
     removeEdgeAG(g, 15, 2);
-    removeEdgeAG(g, 15, 3);
+    removeEdgeAG(g, 15, 3); // remove edge
     displayArrayGraph(g);
     removeVertexAG(g, 15);
     removeVertexAG(g, 4);
     removeVertexAG(g, 35);
     removeVertexAG(g, 30);
-    removeVertexAG(g, 25);
+    removeVertexAG(g, 25); // remove vertex
     displayArrayGraph(g);
     addVertexAG(g, 7);
     addVertexAG(g, 8);
     addVertexAG(g, 9);
     addVertexAG(g, 10);
-    addVertexAG(g, 11);
+    addVertexAG(g, 11); // add vertex
     displayArrayGraph(g);
-    deleteArrayGraph(&g);
+    deleteArrayGraph(&g); //delete
     //system("leaks a.out");
     //gcc -g -fsanitize=address -Wall -Wextra -Werror arraygraph.c
     return (0);

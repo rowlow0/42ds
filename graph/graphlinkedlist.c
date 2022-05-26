@@ -1,5 +1,6 @@
 #include "graphlinkedlist.h"
 /*
+while..
 doubly linked list
 edge
 graph type
