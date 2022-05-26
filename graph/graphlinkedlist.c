@@ -1,10 +1,8 @@
 #include "graphlinkedlist.h"
 /*
 while..
-doubly linked list x
 edge
 graph type
-dfs bfs
 */
 
 //create
