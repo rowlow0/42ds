@@ -3,6 +3,7 @@
 while..
 weight && directed
 space 2d -> 1d
+vetex 100 0
 */
 
 //create
@@ -146,16 +147,18 @@ int removeVertexAG(ArrayGraph* pGraph, int vertexID)
         if(pGraph->pVertex[pGraph->rear] == vertexID)
         {
             free(pGraph->ppAdjEdge[pGraph->rear]);
-            int **a = &pGraph->ppAdjEdge[pGraph->rear];
-            *a = 0;
-            pGraph->pVertex[pGraph->rear--] = 0;
+            //int **a = &pGraph->ppAdjEdge[pGraph->rear];
+            //*a = 0;
+            //pGraph->pVertex[pGraph->rear--] = 0;
+            pGraph->rear--;
         }
         else if(pGraph->pVertex[pGraph->front] == vertexID)
         {
             free(pGraph->ppAdjEdge[pGraph->front]);
-            int **a = &pGraph->ppAdjEdge[pGraph->front];
-            *a = 0;
-            pGraph->pVertex[pGraph->front++] = 0;
+            //int **a = &pGraph->ppAdjEdge[pGraph->front];
+            //*a = 0;
+            //pGraph->pVertex[pGraph->front++] = 0;
+            pGraph->front++;
             if(pGraph->front > pGraph->maxVertexCount)
                 pGraph->front = 0;
             if(!(pGraph->currentVertexCount - 1))
