@@ -15,6 +15,13 @@ ArrayGraph* createArrayGraph(int maxVertexCount, int type)
     new->pVertex = malloc(sizeof(int *) * maxVertexCount);
     return new;
 }
+/*
+1 2 
+x x T
+o x F
+x o F
+o o F
+*/
 
 //delete
 void deleteArrayGraph(ArrayGraph** pGraph)
@@ -69,7 +76,7 @@ int addVertexAG(ArrayGraph* pGraph, int vertexID)
 //add edge to directed graph
 int addEdgeAG(ArrayGraph* pGraph, int fromVertexID, int toVertexID)
 {
-    if(pGraph && pGraph->pVertex && pGraph->graphType == 1 && checkVertexValid(pGraph, fromVertexID) && checkVertexValid(pGraph, toVertexID))
+    if(pGraph && pGraph->pVertex && pGraph->graphType == 1 && fromVertexID != toVertexID && checkVertexValid(pGraph, fromVertexID) && checkVertexValid(pGraph, toVertexID))
     {
         int x=0, y=0;
         for(int i = pGraph->front, j = 0; j < pGraph->currentVertexCount; j++, i++)
@@ -94,7 +101,7 @@ int addEdgeAG(ArrayGraph* pGraph, int fromVertexID, int toVertexID)
 //add edge to directed graph
 int addEdgewithWeightAG(ArrayGraph* pGraph, int fromVertexID, int toVertexID, int weight)
 {
-    if(pGraph && pGraph->pVertex && pGraph->graphType == 2 && checkVertexValid(pGraph, fromVertexID) && checkVertexValid(pGraph, toVertexID))
+    if(pGraph && pGraph->pVertex && pGraph->graphType == 2 && fromVertexID != toVertexID && checkVertexValid(pGraph, fromVertexID) && checkVertexValid(pGraph, toVertexID))
     {
         int x=0, y=0;
         for(int i = pGraph->front, j = 0; j < pGraph->currentVertexCount; j++, i++)
@@ -118,7 +125,7 @@ int addEdgewithWeightAG(ArrayGraph* pGraph, int fromVertexID, int toVertexID, in
 //remove vertex
 int removeVertexAG(ArrayGraph* pGraph, int vertexID)
 {
-    if (pGraph && pGraph->pVertex && checkVertexValid(pGraph, vertexID))
+    if (pGraph && pGraph->pVertex && checkVertexValid(pGraph, vertexID) && (vertexID == pGraph->pVertex[pGraph->rear] || vertexID == pGraph->pVertex[pGraph->front]))
     {
         int y=0;
         for(int i = pGraph->front, j = 0; j < pGraph->currentVertexCount; j++, i++)
@@ -132,11 +139,15 @@ int removeVertexAG(ArrayGraph* pGraph, int vertexID)
         if(pGraph->pVertex[pGraph->rear] == vertexID)
         {
             free(pGraph->ppAdjEdge[pGraph->rear]);
+            int **a = &pGraph->ppAdjEdge[pGraph->rear];
+            *a = 0;
             pGraph->pVertex[pGraph->rear--] = 0;
         }
         else if(pGraph->pVertex[pGraph->front] == vertexID)
         {
             free(pGraph->ppAdjEdge[pGraph->front]);
+            int **a = &pGraph->ppAdjEdge[pGraph->front];
+            *a = 0;
             pGraph->pVertex[pGraph->front++] = 0;
             if(pGraph->front > pGraph->maxVertexCount)
                 pGraph->front = 0;
@@ -183,28 +194,42 @@ void displayArrayGraph(ArrayGraph* pGraph)
 {
     if(pGraph && pGraph->pVertex)
     {
-    if (pGraph->graphType == 1)
-        printf("type : undirected\n");
-    else
-        printf("type : directed\n");
-    printf("max count : %d\n", pGraph->maxVertexCount);
-    printf("current count : %d\n", pGraph->currentVertexCount);
-    printf("front : %d\n", pGraph->front);
-    printf("rear : %d\n", pGraph->rear);   
-    printf("vetex : ");
-    for (int i = pGraph->front, j = 0; j < pGraph->currentVertexCount; j++)
-        printf("%d ",pGraph->pVertex[i++ % pGraph->maxVertexCount]);
-    printf("\n");
-    printf("vetex edge map: \n");
-    printf("\n");
-    for (int i = 0; i < pGraph->currentVertexCount; i++)
-    {
-        for (int j = 0; j < pGraph->maxVertexCount; j++)
-            if(pGraph->ppAdjEdge[i][j])
-                printf("%d ", pGraph->pVertex[j]);
+        if (pGraph->graphType == 1)
+            printf("type : undirected\n");
+        else
+            printf("type : directed\n");
+        printf("max count : %d\n", pGraph->maxVertexCount);
+        printf("current count : %d\n", pGraph->currentVertexCount);
+        printf("front : %d\n", pGraph->front);
+        printf("rear : %d\n", pGraph->rear);   
+        printf("vetex : ");
+        for (int i = pGraph->front, j = 0; j < pGraph->currentVertexCount; j++, i++)
+            printf("%d ",pGraph->pVertex[i % pGraph->maxVertexCount]);
         printf("\n");
-    }
-    printf("\n");
+        printf("vetex edge map: \n");
+        printf("\n");
+        if(pGraph->graphType == 1)
+        {
+            for (int i = pGraph->front, j = 0; j < pGraph->currentVertexCount; j++, i++)
+            {
+                for (int j = 0; j < pGraph->maxVertexCount; j++)
+                    if(pGraph->ppAdjEdge[i % pGraph->maxVertexCount][j])
+                        printf("%d ", pGraph->pVertex[j]);
+                printf("\n");
+            }
+        }
+        else if(pGraph->graphType == 2)
+        {
+            for (int i = pGraph->front, j = 0; j < pGraph->currentVertexCount; j++, i++)
+            {
+                for (int j = 0; j < pGraph->maxVertexCount; j++)
+                    if(pGraph->ppAdjEdge[i % pGraph->maxVertexCount][j])
+                        //printf("%d---W %d--->%d", pGraph->pVertex[j]);
+                printf("\n");
+            }
+        }
+            ;
+        printf("\n");
     }
 }
 
@@ -218,12 +243,16 @@ int main()
     addVertexAG(g, 4);
     addVertexAG(g, 5);
     addVertexAG(g, 6);
-    addVertexAG(g, 7);
     addVertexAG(g, 25);
     addVertexAG(g, 30);
+    addVertexAG(g, 35);
     addEdgeAG(g, 15, 1);
     addEdgeAG(g, 15, 2);
     addEdgeAG(g, 15, 3);
+    addEdgeAG(g, 4, 15);
+    addEdgeAG(g, 4, 21);
+    addEdgeAG(g, 4, 30);
+    addEdgeAG(g, 4, 6);
     displayArrayGraph(g);
     removeEdgeAG(g, 15, 1);
     removeEdgeAG(g, 15, 2);
@@ -231,11 +260,16 @@ int main()
     displayArrayGraph(g);
     removeVertexAG(g, 15);
     removeVertexAG(g, 4);
+    removeVertexAG(g, 35);
     removeVertexAG(g, 30);
     removeVertexAG(g, 25);
+    displayArrayGraph(g);
+    addVertexAG(g, 7);
     addVertexAG(g, 8);
     addVertexAG(g, 9);
     addVertexAG(g, 10);
+    addVertexAG(g, 11);
+    displayArrayGraph(g);
     deleteArrayGraph(&g);
     //system("leaks a.out");
     //gcc -g -fsanitize=address -Wall -Wextra -Werror arraygraph.c
