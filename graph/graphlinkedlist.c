@@ -36,7 +36,7 @@ void clearLinkedList(LinkedList* pList)
 //length
 int getLinkedListLength(LinkedList* pList)
 {
-    return 0;
+        return pList ? pList->currentElementCount : 0;
 }
 
 //delete
