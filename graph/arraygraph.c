@@ -4,6 +4,7 @@ while..
 weight && directed
 space 2d -> 1d
 vetex 100 0
+is graph? function
 */
 
 //create
