@@ -167,7 +167,7 @@ void    print_list(LinkedList* pList)
 {
     if (pList)
     {
-        ListNode *pointer = pList->headerNode.pLink; // . x
+        ListNode *pointer = pList->headerNode.pLink;
         for (int i = 0; i < pList->currentElementCount; i++)
         {
             printf("%d ",pointer->data.vertexID);
