@@ -1,7 +1,7 @@
 #include "graphlinkedlist.h"
 /*
-while..
-edge
+to do list
+directed edge
 graph type
 */
 
@@ -13,7 +13,7 @@ LinkedList* createLinkedList()
     return new;
 }
 
-//add; overflow of pList->currentElementCount are not checking
+//add; pList->currentElementCount overflow is not checked
 int addLLElement(LinkedList* pList, int index, ListNode element)
 {
     if(pList && index >= 0)
@@ -86,6 +86,26 @@ int removeLLElement(LinkedList* pList, int index)
         return 1;
     }
     return 0;
+}
+
+static int checkVertexValid(LinkedList *pList, int vertex)
+{
+	ListNode *curr = pList->headerNode.pLink;
+	while(curr)
+	{
+		if(curr->data.vertexID == vertex)
+			return (1);
+		curr = curr->pLink;
+	}
+	return (0);
+}
+
+void addLLEEdge(LinkedList* pList, int from, int to)
+{
+	if(pList && from != to && checkVertexValid(pList, from) && checkVertexValid(pList, to))
+	{
+
+	}
 }
 
 /*
@@ -163,8 +183,8 @@ int main()
     ListNode element;
     GraphVertex g;
     element.pLink = 0;
-    g.weight = 0;
     g.vertexID = 1; // add
+	g.weight = 0;
     element.data = g;
     addLLElement(list,100,element);
     g.vertexID = 2;
@@ -217,7 +237,7 @@ int main()
     print_list(list); // remove & print
     deleteLinkedList(&list);
     print_list(list); //delete
-    system("leaks a.out");
+    //system("leaks a.out");
     //gcc -g -fsanitize=address -Wall -Wextra -Werror graphlinkedlist.c
     return (0);
 }

@@ -7,7 +7,7 @@
 typedef struct GraphVertexType
 {
 	int vertexID;	//
-	int weight;		//
+	int weight;
 } GraphVertex;
 
 typedef struct ListNodeType
@@ -19,11 +19,12 @@ typedef struct ListNodeType
 typedef struct LinkedListType
 {
 	int currentElementCount;	//
-	ListNode headerNode;		//Header Node
+	ListNode headerNode;		//
 } LinkedList;
 
 LinkedList* createLinkedList();
 int addLLElement(LinkedList* pList, int index, ListNode element);
+void addLLEEdge(LinkedList* pList, int from, int to);
 int removeLLElement(LinkedList* pList, int index);
 ListNode* getLLElement(LinkedList* pList, int index);
 

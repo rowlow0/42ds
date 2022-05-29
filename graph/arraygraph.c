@@ -1,7 +1,7 @@
 #include "arraygraph.h" //queue
 /*
-while..
-space 2d -> 1d (undirected)
+to do list
+space 2d -> 1d //adjacency list
 vetex 100 0
 */
 
