@@ -1,10 +1,8 @@
 #include "arraygraph.h" //queue
 /*
 while..
-weight && directed
-space 2d -> 1d
+space 2d -> 1d (undirected)
 vetex 100 0
-is graph? function
 */
 
 //create
@@ -70,7 +68,7 @@ int checkVertexValid(ArrayGraph* pGraph, int vertexID)
 //add vertex
 int addVertexAG(ArrayGraph* pGraph, int vertexID)
 {
-    if(pGraph && pGraph->pVertex && pGraph->graphType == 1 && pGraph->currentVertexCount < pGraph->maxVertexCount && !checkVertexValid(pGraph, vertexID))
+    if(pGraph && pGraph->pVertex && (pGraph->graphType == 1 ||  pGraph->graphType == 2) && pGraph->currentVertexCount < pGraph->maxVertexCount && !checkVertexValid(pGraph, vertexID))
     {
         pGraph->currentVertexCount++;
         if (++pGraph->rear == pGraph->maxVertexCount)
@@ -91,13 +89,13 @@ int addEdgeAG(ArrayGraph* pGraph, int fromVertexID, int toVertexID)
         for(int i = pGraph->front, j = 0; j < pGraph->currentVertexCount; j++, i++)
             if(pGraph->pVertex[i % pGraph->maxVertexCount] == fromVertexID)
             {
-                x = i;
+                x = i % pGraph->maxVertexCount;
                 break;
             }
         for(int i = pGraph->front, j = 0; j < pGraph->currentVertexCount; j++, i++)
             if(pGraph->pVertex[i % pGraph->maxVertexCount] == toVertexID)
             {
-                y = i;
+                y = i % pGraph->maxVertexCount;
                 break;
             }
         pGraph->ppAdjEdge[x][y] = 1;
@@ -116,13 +114,13 @@ int addEdgewithWeightAG(ArrayGraph* pGraph, int fromVertexID, int toVertexID, in
         for(int i = pGraph->front, j = 0; j < pGraph->currentVertexCount; j++, i++)
             if(pGraph->pVertex[i % pGraph->maxVertexCount] == fromVertexID)
             {
-                x = i;
+                x = i % pGraph->maxVertexCount;
                 break;
             }
         for(int i = pGraph->front, j = 0; j < pGraph->currentVertexCount; j++, i++)
             if(pGraph->pVertex[i % pGraph->maxVertexCount] == toVertexID)
             {
-                y = i;
+                y = i % pGraph->maxVertexCount;
                 break;
             }
         pGraph->ppAdjEdge[x][y] = weight;
@@ -140,7 +138,7 @@ int removeVertexAG(ArrayGraph* pGraph, int vertexID)
         for(int i = pGraph->front, j = 0; j < pGraph->currentVertexCount; j++, i++)
             if(pGraph->pVertex[i % pGraph->maxVertexCount] == vertexID)
             {
-                y = i;
+                y = i % pGraph->maxVertexCount;
                 break;
             }
         for(int i = pGraph->front, j = 0; j < pGraph->currentVertexCount; j++, i++)
@@ -223,9 +221,9 @@ void displayArrayGraph(ArrayGraph* pGraph)
         {
             for (int i = pGraph->front, j = 0; j < pGraph->currentVertexCount; j++, i++)
             {
-                for (int j = 0; j < pGraph->maxVertexCount; j++)
-                    if(pGraph->ppAdjEdge[i % pGraph->maxVertexCount][j])
-                        printf("%d ", pGraph->pVertex[j]);
+                for (int k = 0; k < pGraph->maxVertexCount; k++)
+                    if(pGraph->ppAdjEdge[i % pGraph->maxVertexCount][k] && k != i % pGraph->maxVertexCount)
+                        printf("%d<-->%d ", pGraph->pVertex[i % pGraph->maxVertexCount],pGraph->pVertex[k]);
                 printf("\n");
             }
         }
@@ -233,13 +231,12 @@ void displayArrayGraph(ArrayGraph* pGraph)
         {
             for (int i = pGraph->front, j = 0; j < pGraph->currentVertexCount; j++, i++)
             {
-                for (int j = 0; j < pGraph->maxVertexCount; j++)
-                    if(pGraph->ppAdjEdge[i % pGraph->maxVertexCount][j])
-                        //printf("%d---W %d--->%d", pGraph->pVertex[j]);
+                for (int k = 0; k < pGraph->maxVertexCount; k++)
+                    if(pGraph->ppAdjEdge[i % pGraph->maxVertexCount][k] && k != i % pGraph->maxVertexCount)
+                        printf("%d-->%d[%d] ",pGraph->pVertex[i % pGraph->maxVertexCount], pGraph->pVertex[k], pGraph->ppAdjEdge[i % pGraph->maxVertexCount][k]);
                 printf("\n");
             }
         }
-            ;
         printf("\n");
     }
 }
@@ -280,8 +277,38 @@ int main()
     addVertexAG(g, 9);
     addVertexAG(g, 10);
     addVertexAG(g, 11); // add vertex
+    addEdgeAG(g, 4, 10);
+    addEdgeAG(g, 7, 4);
     displayArrayGraph(g);
     deleteArrayGraph(&g); //delete
+
+    g = createArrayGraph(10,GRAPH_DIRECTED);
+    addVertexAG(g, 15);
+    addVertexAG(g, 1);
+    addVertexAG(g, 2);
+    addVertexAG(g, 3);
+    addVertexAG(g, 4);
+    addVertexAG(g, 5);
+    addVertexAG(g, 6);
+    addVertexAG(g, 25);
+    addVertexAG(g, 30);
+    addVertexAG(g, 35);
+    addEdgewithWeightAG(g, 0, 1, 1);
+    addEdgewithWeightAG(g, 1, 0, 2);
+    addEdgewithWeightAG(g, 3, 4, 3);
+    addEdgewithWeightAG(g, 4, 3, 4);
+    addEdgewithWeightAG(g, 4, 1, 5);
+    addEdgewithWeightAG(g, 15, 25, 6);
+    addEdgewithWeightAG(g, 4, 15, 7);
+    addEdgewithWeightAG(g, 15, 4, 8);
+    displayArrayGraph(g);
+    removeVertexAG(g, 15);
+    removeVertexAG(g, 4);
+    removeVertexAG(g, 35);
+    removeVertexAG(g, 30);
+    removeVertexAG(g, 25); // remove vertex
+    displayArrayGraph(g);
+    deleteArrayGraph(&g); // delete
     //system("leaks a.out");
     //gcc -g -fsanitize=address -Wall -Wextra -Werror arraygraph.c
     return (0);
