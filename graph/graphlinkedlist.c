@@ -61,6 +61,7 @@ int addLLElement(LinkedList* pList, int index, ListNode element)
         pList->currentElementCount++;
         return 1;
     }
+
     return 0;
 }
 
@@ -74,6 +75,13 @@ int removeLLElement(LinkedList* pList, int index)
         if(index == 0)
         {
             tmp = pList->headerNode.pLink;
+            ListNode *pointer = pList->headerNode.pLink;
+            while(pointer)
+            {
+                deleteLLEEdge(pList, pointer->data.vertexID, tmp->data.vertexID);
+                deleteLLEEdge(pList, tmp->data.vertexID, pointer->data.vertexID);
+                pointer = pointer->pLink;
+            }
             pList->headerNode.pLink = pList->headerNode.pLink->pLink;
         }
         else
@@ -82,6 +90,13 @@ int removeLLElement(LinkedList* pList, int index)
             while(--index)
                 prev = prev->pLink;
             tmp = prev->pLink;
+            ListNode *pointer = pList->headerNode.pLink;
+            while(pointer)
+            {
+                deleteLLEEdge(pList, pointer->data.vertexID, tmp->data.vertexID);
+                deleteLLEEdge(pList, tmp->data.vertexID, pointer->data.vertexID);
+                pointer = pointer->pLink;
+            }
             prev->pLink = tmp->pLink;
         }
         free(tmp);
@@ -110,6 +125,8 @@ void deleteLLEEdge(LinkedList *pList, int from, int to)
         ListNode *prev = pList->headerNode.pLink;
         while(prev->data.vertexID != from)
             prev = prev->pLink;
+        if(!prev->head)
+                return ;
         while(prev->head->data.vertexID != to)
         {
             prev = prev->head;
@@ -357,6 +374,16 @@ int main()
     deleteLLEEdge(list, 6, 0);
     deleteLLEEdge(list, 2, 0);
     deleteLLEEdge(list,2, 4);
+    removeLLElement(list, 7);
+    print_list(list);
+    addLLEEdge(list, 3, 2, 15);
+    addLLEEdge(list, 3, 4, 16);
+    addLLEEdge(list, 3, 5, 17);
+    addLLEEdge(list, 3, 6, 18);
+    addLLEEdge(list, 3, 6, 18);
+    print_list(list);
+    //removeLLElement(list, 4);
+    //removeLLElement(list, 5);
     print_list(list);
     deleteLinkedList(&list);
     //system("leaks a.out");
