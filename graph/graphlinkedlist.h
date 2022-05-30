@@ -14,6 +14,7 @@ typedef struct ListNodeType
 {
 	GraphVertex data;
 	struct ListNodeType* pLink;
+	struct ListNodeType* head;
 } ListNode;
 
 typedef struct LinkedListType
@@ -24,7 +25,7 @@ typedef struct LinkedListType
 
 LinkedList* createLinkedList();
 int addLLElement(LinkedList* pList, int index, ListNode element);
-void addLLEEdge(LinkedList* pList, int from, int to);
+void addLLEEdge(LinkedList* pList, int from, int to, int weight);
 int removeLLElement(LinkedList* pList, int index);
 ListNode* getLLElement(LinkedList* pList, int index);
 
