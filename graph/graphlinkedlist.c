@@ -382,8 +382,8 @@ int main()
     addLLEEdge(list, 3, 6, 18);
     addLLEEdge(list, 3, 6, 18);
     print_list(list);
-    //removeLLElement(list, 4);
-    //removeLLElement(list, 5);
+    removeLLElement(list, 4);
+    removeLLElement(list, 5);
     print_list(list);
     deleteLinkedList(&list);
     //system("leaks a.out");
