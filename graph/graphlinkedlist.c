@@ -67,9 +67,9 @@ int addLLElement(LinkedList* pList, int index, ListNode element)
 //remove //edge ++
 int removeLLElement(LinkedList* pList, int index)
 {
-    if (pList && index >= 0)
+    if (pList && index >= 0 && pList->currentElementCount)
     {
-        index = pList->currentElementCount < index ? pList->currentElementCount -1 : index;
+        index = pList->currentElementCount <= index ? pList->currentElementCount -1 : index;
         ListNode *tmp;
         if(index == 0)
         {
@@ -101,6 +101,25 @@ static int checkVertexValid(LinkedList *pList, int vertex)
 		curr = curr->pLink;
 	}
 	return (0);
+}
+
+void deleteLLEEdge(LinkedList *pList, int from, int to)
+{
+    if(pList && from != to && checkVertexValid(pList, from) && checkVertexValid(pList, to))
+    {
+        ListNode *prev = pList->headerNode.pLink;
+        while(prev->data.vertexID != from)
+            prev = prev->pLink;
+        while(prev->head->data.vertexID != to)
+        {
+            prev = prev->head;
+            if(!prev->head)
+                return ;
+        }
+        ListNode *get = prev->head;
+        prev->head = prev ->head->head;
+        free(get);
+    }
 }
 
 void addLLEEdge(LinkedList* pList, int from, int to, int weight)
@@ -310,11 +329,15 @@ int main()
     g.vertexID = 6;
     element.data = g;
     addLLElement(list,100,element);
+    addLLEEdge(list,0,0,99);
+    addLLEEdge(list,0,6,99);
     addLLEEdge(list,0,1,1);
-    addLLEEdge(list,0,1,3);
-    addLLEEdge(list,0,2,2);
+    addLLEEdge(list,0,1,6);
+    addLLEEdge(list,0,2,99);
+    addLLEEdge(list,1,2,2);
     addLLEEdge(list,1,2,3);
     addLLEEdge(list,1,3,4);
+    addLLEEdge(list,1,4,99);
     addLLEEdge(list,2,4,5);
     addLLEEdge(list,3,5,6);
     addLLEEdge(list,4,6,7);
@@ -323,6 +346,16 @@ int main()
     addLLEEdge(list,6,3,10);
     addLLEEdge(list,7,4,11);
     addLLEEdge(list,7,5,12);
+    print_list(list);
+    deleteLLEEdge(list, 0, 6);
+    deleteLLEEdge(list, 0, 2);
+    deleteLLEEdge(list, 1, 3);
+    print_list(list);
+    addLLEEdge(list,0,6,99);
+    addLLEEdge(list,0,2,99);
+    print_list(list);
+    deleteLLEEdge(list, 6, 0);
+    deleteLLEEdge(list, 2, 0);
     print_list(list);
     deleteLinkedList(&list);
     //system("leaks a.out");
