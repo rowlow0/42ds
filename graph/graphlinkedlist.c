@@ -356,6 +356,7 @@ int main()
     print_list(list);
     deleteLLEEdge(list, 6, 0);
     deleteLLEEdge(list, 2, 0);
+    deleteLLEEdge(list,2, 4);
     print_list(list);
     deleteLinkedList(&list);
     //system("leaks a.out");
