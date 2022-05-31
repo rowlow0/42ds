@@ -15,6 +15,7 @@ typedef struct ListNodeType
 	GraphVertex data;
 	struct ListNodeType* pLink;
 	struct ListNodeType* head;
+	struct ListNodeType* que;
 } ListNode;
 
 typedef struct LinkedListType

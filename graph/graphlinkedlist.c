@@ -2,6 +2,7 @@
 /*
 to do list
 graph type & undirected edge
+dfs -> stack
 */
 
 //create
@@ -263,10 +264,69 @@ void    print_node(LinkedList* pList)
     }
 }
 
+typedef struct Queue
+{
+    int         i;
+	ListNode *front;
+    ListNode *rear;
+} queue;
+
+queue *create(ListNode * node)
+{
+    queue *q = malloc(sizeof(queue));
+    q->rear = node;
+    q->front = node;
+    q->i = 1;
+    return q;
+}
+
+void enqueue(queue *q, ListNode *node)
+{
+    q->rear->que = node;
+    q->rear = node;
+    q->rear->que = NULL;
+    q->i++;
+}
+
+void dequeue(queue *q)
+{
+    q->front = q->front->que;
+    q->i--;
+}
+
+int empty(queue *q)
+{
+    return q->i == 0;
+}
+
 void bfs(LinkedList* pList,int vertex, int *visited)
 {
-
+    visited[vertex] = 1;
+    ListNode *pointer = pList->headerNode.pLink;
+    while(vertex != pointer->data.vertexID)
+        pointer = pointer->pLink;
+    queue *q = create(pointer);
+    while(!empty(q))
+    {
+        //push
+        ListNode *pointer2 = pointer == q->front ? q->front->head : q->front;
+        while(pointer2)
+        {
+            if(!visited[pointer2->data.vertexID])
+            {
+                visited[pointer2->data.vertexID] = 1;
+                enqueue(q, pointer2);
+            }
+            pointer2 = pointer2->head;
+        }
+        printf("%d ", q->front->data.vertexID);
+        dequeue(q);
+    }
+    printf("\n");
+    free(q);
 }
+
+
 
 void dfs(LinkedList* pList,int vertex, int *visited)
 {
@@ -384,7 +444,7 @@ int main()
 
     int *visited =calloc(sizeof(int),sizeof(int) *list->currentElementCount);
     printf("dfs\n");
-    int tt = 0;
+    //int tt = 0;
     //if tt && list && visited 
     dfs(list, 0, visited);
     //else
