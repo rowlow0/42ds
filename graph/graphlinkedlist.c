@@ -263,6 +263,23 @@ void    print_node(LinkedList* pList)
     }
 }
 
+void bfs(LinkedList* pList)
+{
+
+}
+
+void dfs(LinkedList* pList,int vertex, int *visited)
+{
+    visited[vertex] = 1;
+    printf("%d ",vertex);
+    ListNode *i = pList->headerNode.pLink;
+    while (i->data.vertexID != vertex)
+        i = i->pLink;
+    for(i = i->head; i;i = i->head)
+        if(!visited[i->data.vertexID])
+            dfs(pList, i->data.vertexID, visited);
+}
+
 int main()
 {
     LinkedList *list = createLinkedList();
@@ -364,6 +381,19 @@ int main()
     addLLEEdge(list,7,4,11);
     addLLEEdge(list,7,5,12);
     print_list(list);
+
+    int *visited =calloc(sizeof(int),sizeof(int) *list->currentElementCount);
+    printf("dfs\n");
+    int tt = 0;
+    //if tt && list && visited 
+    dfs(list, 0, visited);
+    //else
+    // printf("null\n");
+    printf("\n\n");
+    free(visited);
+    printf("bfs\n"); //queue
+    printf("=================\n");
+    /*
     deleteLLEEdge(list, 0, 6);
     deleteLLEEdge(list, 0, 2);
     deleteLLEEdge(list, 1, 3);
@@ -382,9 +412,10 @@ int main()
     addLLEEdge(list, 3, 6, 18);
     addLLEEdge(list, 3, 6, 18);
     print_list(list);
-    //removeLLElement(list, 4);
-    //removeLLElement(list, 5);
+    removeLLElement(list, 4);
+    removeLLElement(list, 5);
     print_list(list);
+    */
     deleteLinkedList(&list);
     //system("leaks a.out");
     //gcc -g -fsanitize=address -Wall -Wextra -Werror graphlinkedlist.c
