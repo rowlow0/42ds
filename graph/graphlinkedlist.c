@@ -263,7 +263,7 @@ void    print_node(LinkedList* pList)
     }
 }
 
-void bfs(LinkedList* pList)
+void bfs(LinkedList* pList,int vertex, int *visited)
 {
 
 }
@@ -389,9 +389,16 @@ int main()
     dfs(list, 0, visited);
     //else
     // printf("null\n");
-    printf("\n\n");
     free(visited);
+    printf("\n\n");
     printf("bfs\n"); //queue
+    visited =calloc(sizeof(int),sizeof(int) *list->currentElementCount);
+    //if tt && list && visited 
+    bfs(list, 0, visited);
+    //else
+    // printf("null\n");
+    free(visited);
+    
     printf("=================\n");
     /*
     deleteLLEEdge(list, 0, 6);
