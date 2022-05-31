@@ -309,13 +309,16 @@ void bfs(LinkedList* pList,int vertex, int *visited)
     while(!empty(q))
     {
         //push
-        ListNode *pointer2 = pointer == q->front ? q->front->head : q->front;
+        ListNode *pointer2 = q->front->head;
         while(pointer2)
         {
             if(!visited[pointer2->data.vertexID])
             {
                 visited[pointer2->data.vertexID] = 1;
-                enqueue(q, pointer2);
+                ListNode *pointer3 = pList->headerNode.pLink;
+                while(pointer3->data.vertexID != pointer2->data.vertexID)
+                    pointer3 = pointer3->pLink;
+                enqueue(q, pointer3);
             }
             pointer2 = pointer2->head;
         }
@@ -325,8 +328,6 @@ void bfs(LinkedList* pList,int vertex, int *visited)
     printf("\n");
     free(q);
 }
-
-
 
 void dfs(LinkedList* pList,int vertex, int *visited)
 {
