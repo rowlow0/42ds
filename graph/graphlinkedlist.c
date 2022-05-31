@@ -280,8 +280,9 @@ queue *create(ListNode * node)
     return q;
 }
 
-void enqueue(queue *q, ListNode *node)
+void enqueue(queue *q, ListNode *node, ListNode *pointer)
 {
+    pointer = pointer->pLink;
     q->rear->que = node;
     q->rear = node;
     q->rear->que = NULL;
@@ -306,6 +307,7 @@ void bfs(LinkedList* pList,int vertex, int *visited)
     while(vertex != pointer->data.vertexID)
         pointer = pointer->pLink;
     queue *q = create(pointer);
+    pointer = pList->headerNode.pLink;
     while(!empty(q))
     {
         //push
@@ -315,10 +317,10 @@ void bfs(LinkedList* pList,int vertex, int *visited)
             if(!visited[pointer2->data.vertexID])
             {
                 visited[pointer2->data.vertexID] = 1;
-                ListNode *pointer3 = pList->headerNode.pLink;
+                ListNode *pointer3 = pointer;
                 while(pointer3->data.vertexID != pointer2->data.vertexID)
                     pointer3 = pointer3->pLink;
-                enqueue(q, pointer3);
+                enqueue(q, pointer3, pointer);
             }
             pointer2 = pointer2->head;
         }
