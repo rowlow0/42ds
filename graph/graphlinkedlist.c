@@ -342,7 +342,7 @@ void dfs(LinkedList* pList,int vertex, int *visited)
         if(!visited[i->data.vertexID])
             dfs(pList, i->data.vertexID, visited);
 }
-
+/*
 int main()
 {
     LinkedList *list = createLinkedList();
@@ -463,7 +463,6 @@ int main()
     free(visited);
     
     printf("=================\n");
-    /*
     deleteLLEEdge(list, 0, 6);
     deleteLLEEdge(list, 0, 2);
     deleteLLEEdge(list, 1, 3);
@@ -485,9 +484,9 @@ int main()
     removeLLElement(list, 4);
     removeLLElement(list, 5);
     print_list(list);
-    */
     deleteLinkedList(&list);
     //system("leaks a.out");
     //gcc -g -fsanitize=address -Wall -Wextra -Werror graphlinkedlist.c
     return (0);
 }
+*/

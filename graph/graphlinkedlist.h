@@ -35,7 +35,6 @@ int getLinkedListLength(LinkedList* pList);
 void deleteLinkedList(LinkedList** pList);
 
 void deleteLLEEdge(LinkedList *pList, int from, int to);
-void addLLEEdge(LinkedList* pList, int from, int to, int weight);
 #endif
 
 #ifndef _COMMON_LIST_DEF_

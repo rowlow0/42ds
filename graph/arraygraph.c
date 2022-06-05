@@ -105,10 +105,9 @@ int addEdgeAG(ArrayGraph* pGraph, int fromVertexID, int toVertexID)
     return 0;
 }
 
-//add edge to directed graph
 int addEdgewithWeightAG(ArrayGraph* pGraph, int fromVertexID, int toVertexID, int weight)
 {
-    if(pGraph && pGraph->pVertex && pGraph->graphType == 2 && fromVertexID != toVertexID && checkVertexValid(pGraph, fromVertexID) && checkVertexValid(pGraph, toVertexID))
+    if(pGraph && pGraph->pVertex  && fromVertexID != toVertexID && checkVertexValid(pGraph, fromVertexID) && checkVertexValid(pGraph, toVertexID))
     {
         int x=0, y=0;
         for(int i = pGraph->front, j = 0; j < pGraph->currentVertexCount; j++, i++)
@@ -124,6 +123,8 @@ int addEdgewithWeightAG(ArrayGraph* pGraph, int fromVertexID, int toVertexID, in
                 break;
             }
         pGraph->ppAdjEdge[x][y] = weight;
+        if(pGraph->graphType == 1)
+            pGraph->ppAdjEdge[y][x] = weight;
         return 1;
     }
     return 0;
@@ -240,7 +241,7 @@ void displayArrayGraph(ArrayGraph* pGraph)
         printf("\n");
     }
 }
-
+/*
 int main()
 {
     ArrayGraph *g = createArrayGraph(10,GRAPH_UNDIRECTED);
@@ -313,3 +314,4 @@ int main()
     //gcc -g -fsanitize=address -Wall -Wextra -Werror arraygraph.c
     return (0);
 }
+*/
