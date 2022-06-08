@@ -43,14 +43,50 @@ void dsu_init(Dsu **dsu,int size)
     }
 }
 
+void container_init(GraphVertex **container, LinkedList *list)
+{
+    *container = malloc(sizeof(GraphVertex) * list->headerNode.data.count);
+    ListNode *pointer = list->headerNode.pLink, *pointer2;
+    GraphVertex *iter = *container;
+    for(;pointer;)
+    {
+        pointer2 = pointer->head;
+        while(pointer2)
+        {
+            *iter++ = pointer2->data;
+            pointer2 = pointer2->head;
+        }
+        pointer = pointer->pLink;
+    }
+}
+
+void swap(GraphVertex **container, GraphVertex **container2)
+{
+    GraphVertex *container3 = *container;
+    *container = *container2;
+    *container2 = container3;
+}
+
+void container_sort(GraphVertex **container, int size)
+{
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = i; j < size; j++)
+        {
+            if((*container + i)->weight > (*container + j)->weight)
+                swap(container + i, container + j + 1);
+        }
+    }
+}
+
 void kruskalV2(LinkedList *list)
 {
     Dsu *s;
-    int ans = 0, size;
+    GraphVertex *container;
+    int ans = 0;
     dsu_init(&s, list->currentElementCount);
-    ListNode *pointer = list->headerNode.pLink, *pointer2;
-    GraphVertex *container = malloc(sizeof(GraphVertex) * list->headerNode.data.count);
-    int i = 0;
+    container_init(&container, list);
+    container_sort(&container, list->headerNode.data.count);
     printf("minimum cost spanning tree: %d\n", ans);
     free(s->parent);
     free(s->rank);
@@ -67,7 +103,6 @@ int main()
 	g.weight = 0;
     g.count = 0;
     g.parent_ID = 0;
-    list = createLinkedList();
     g.vertexID = 1;
     element.data = g;
     addLLElement(list,100,element);
@@ -110,6 +145,6 @@ int main()
     kruskalV2(list);
     deleteLinkedList(&list);
     //gcc -g -fsanitize=address -Wall -Wextra -Werror kruskalv1.c
-    //system("leaks a.out");
+    system("leaks a.out");
     return (0);
 }
