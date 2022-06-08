@@ -8,6 +8,8 @@ typedef struct GraphVertexType
 {
 	int vertexID;	//
 	int weight;
+	int parent_ID;
+	int count;
 } GraphVertex;
 
 typedef struct ListNodeType

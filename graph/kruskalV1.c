@@ -23,10 +23,8 @@ void init_parent(int **parent, ArrayGraph *g)
 
 void    kruskalV1(ArrayGraph *g)
 {
-    int mincost = 0;
-    int *parrent;
-    init_parent(&parrent, g);
-    int edge_count = 0;
+    int mincost = 0, edge_count = 0, *parent;
+    init_parent(&parent, g);
     while(edge_count < g->currentVertexCount -1)
     {
         int min = INT_MAX, a = -1, b = -1;
@@ -34,7 +32,7 @@ void    kruskalV1(ArrayGraph *g)
         {
             for(int j = 0; j < g->currentVertexCount; j++)
             {
-                if(find(i, parrent) != find(j, parrent) && g->ppAdjEdge[i][j] < min)
+                if(find(i, parent) != find(j, parent) && g->ppAdjEdge[i][j] < min)
                 {
                     min = g->ppAdjEdge[i][j];
                     a = i;
@@ -42,19 +40,18 @@ void    kruskalV1(ArrayGraph *g)
                 }
             }
         }
-        if(a == -1)
+        if(a != b)
         {
-            free(parrent);
-            return ;
+            union1(a, b, parent);
+            for (int i = 0; i < g->currentVertexCount; i++)
+                printf("%d ", parent[i]);
+            printf("\n");
+            printf("Edge %d: (%d %d) cost:%d \n", edge_count, a, b, min);
+            mincost += min;
         }
-        union1(a, b, parrent);
-        for (int i = 0; i < g->currentVertexCount; i++)
-            printf("%d ", parrent[i]);
-        printf("\n");
-        printf("Edge %d: (%d %d) cost:%d \n", edge_count++, a, b, min);
-        mincost += min;
+        edge_count++;
     }
-    free(parrent);
+    free(parent);
     printf("\n minimum cost = %d \n", mincost);
 }
 
@@ -89,8 +86,4 @@ int main()
     return (0);
 }
 
-/*
-to do ..
-Sort all the edges in non-decreasing order of their weight.
 //https://www.geeksforgeeks.org/kruskals-algorithm-simple-implementation-for-adjacency-matrix/
-*/

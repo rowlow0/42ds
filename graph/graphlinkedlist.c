@@ -147,15 +147,20 @@ void addLLEEdge(LinkedList* pList, int from, int to, int weight)
         ListNode *prev = pList->headerNode.pLink;
         while(prev->data.vertexID != from)
             prev = prev->pLink;
+        int parent = prev->data.parent_ID;
+        ListNode *q = prev;
         while(prev->head)
         {
             prev = prev->head;
             if (prev->data.vertexID == to)
                 return ;
         }
+        pList->headerNode.data.count++;
+        q->data.count++;
         prev->head = malloc(sizeof(ListNode));
         prev->head->data.vertexID = to;
         prev->head->data.weight = weight;
+        prev->head->data.parent_ID = parent;
         prev->head->head = NULL;
 	}
 }
