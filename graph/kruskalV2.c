@@ -91,6 +91,7 @@ void container_sort(GraphVertex *container, int size)
 }
 */
 
+/*
 //select sort
 void container_sort(GraphVertex *container, int size)
 {
@@ -127,6 +128,22 @@ void container_sort(GraphVertex *container, int size)
     //    printf("%d ",container[i].weight);
     //printf("\n");
 }
+*/
+
+
+//quick sort
+void container_sort(GraphVertex *container, int size)
+{
+
+}
+
+//insertion sort
+
+//merge sort
+
+//heap sort
+
+//radix sort
 
 void kruskalV2(LinkedList *list)
 {
@@ -213,7 +230,7 @@ int main()
     print_list(list);
     kruskalV2(list);
     deleteLinkedList(&list);
-    //gcc -g -fsanitize=address -Wall -Wextra -Werror kruskalv1.c
+    //gcc -g -fsanitize=address -Wall -Wextra -Werror kruskalv2.c
     //gcc -Wall -Wextra -Werror kruskalV2.c
     //system("leaks a.out");
     return (0);
