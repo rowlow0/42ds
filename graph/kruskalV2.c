@@ -60,33 +60,93 @@ void container_init(GraphVertex **container, LinkedList *list)
     }
 }
 
-void swap(GraphVertex **container, GraphVertex **container2)
+void swap(GraphVertex *container, GraphVertex *container2)
 {
-    GraphVertex *container3 = *container;
+    GraphVertex container3 = *container;
     *container = *container2;
     *container2 = container3;
 }
 
-void container_sort(GraphVertex **container, int size)
+/*
+//bubble sort
+void container_sort(GraphVertex *container, int size)
 {
+    int flag;
+
     for (int i = 0; i < size; i++)
     {
-        for (int j = i; j < size; j++)
+        flag = 0;
+        for (int j = i + 1; j < size; j++)
         {
-            if((*container + i)->weight > (*container + j)->weight)
-                swap(container + i, container + j + 1);
+            if((container + i)->weight > (container + j)->weight)
+            {
+                swap(container + i, container + j);
+                //swap(&container[i], &container[j]);
+                flag = 1;
+            }
+        }
+        if (!flag) // issorted
+            break;
+    }
+}
+*/
+
+//select sort
+void container_sort(GraphVertex *container, int size)
+{
+    int pos;
+    int k;
+    int mid;
+
+    mid = (float)size / 2 + 0.5;
+    //for(int i = 0; i < 13 ; i++)
+    //    printf("%d ",container[i].weight);
+    //printf("\n");
+    for (int i = 0; i < mid; i++)
+    {
+        pos = k = i;
+        for (int j = i + 1; j < size - i; j++)
+        {
+            if((container + pos)->weight > (container + j)->weight)
+                pos = j;
+            else if((container + k)->weight < (container + j)->weight)
+                k = j;
+        }
+        if (pos == i) // issorted
+            break;
+        else
+        {
+            swap(container + i, container + pos);
+            if(k != i)
+                swap(container + size - 1 - i, container + k);
+            else
+                swap(container + size - 1 - i, container + pos);
         }
     }
+    //for(int i = 0; i < 13 ; i++)
+    //    printf("%d ",container[i].weight);
+    //printf("\n");
 }
 
 void kruskalV2(LinkedList *list)
 {
     Dsu *s;
     GraphVertex *container;
-    int ans = 0;
+    int ans;
+
+    ans = 0;
     dsu_init(&s, list->currentElementCount);
     container_init(&container, list);
-    container_sort(&container, list->headerNode.data.count);
+    container_sort(container, list->headerNode.data.count);
+    for(int i = 0; i < list->headerNode.data.count; i++)
+    {
+        if(find((container + i)->vertexID, s->parent) != find((container + i)->parent_ID, s->parent))
+        {
+            unite((container + i)->parent_ID, (container + i)->vertexID, s);
+            ans += (container + i)->weight;
+            printf("%d -- %d == %d\n", (container + i)->parent_ID, (container + i)->vertexID, (container + i)->weight);
+        }
+    }
     printf("minimum cost spanning tree: %d\n", ans);
     free(s->parent);
     free(s->rank);
@@ -126,6 +186,7 @@ int main()
     addLLElement(list,100,element);
     addLLEEdge(list,0,0,99);
     addLLEEdge(list,0,6,99);
+    addLLEEdge(list,0,3,99);
     addLLEEdge(list,0,1,1);
     addLLEEdge(list,0,1,6);
     addLLEEdge(list,0,2,99);
@@ -141,10 +202,19 @@ int main()
     addLLEEdge(list,6,3,10);
     addLLEEdge(list,7,4,11);
     addLLEEdge(list,7,5,12);
+    
+    //addLLEEdge(list,0,2,3);
+    //addLLEEdge(list,1,2,2);
+    //addLLEEdge(list,3,5,5);
+    //addLLEEdge(list,4,5,6);
+    //addLLEEdge(list,0,1,4);
+    //addLLEEdge(list,2,3,1);
+    //addLLEEdge(list,4,3,1);
     print_list(list);
     kruskalV2(list);
     deleteLinkedList(&list);
     //gcc -g -fsanitize=address -Wall -Wextra -Werror kruskalv1.c
-    system("leaks a.out");
+    //gcc -Wall -Wextra -Werror kruskalV2.c
+    //system("leaks a.out");
     return (0);
 }

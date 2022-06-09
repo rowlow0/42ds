@@ -199,6 +199,12 @@ int removeEdgeAG(ArrayGraph* pGraph, int fromVertexID, int toVertexID)
     return 0;
 }
 
+/*
+0 0 0 1 0 0
+0 3 4 0 0 0
+0 2 3 5 6 0
+*/
+
 //display
 void displayArrayGraph(ArrayGraph* pGraph)
 {

@@ -10,6 +10,7 @@ LinkedList* createLinkedList()
 {
     LinkedList *new = malloc(sizeof(LinkedList));
     new->currentElementCount = 0;
+    new->headerNode.data.count = 0;
     return new;
 }
 
