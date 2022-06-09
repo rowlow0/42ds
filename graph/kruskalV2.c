@@ -6,6 +6,15 @@ typedef struct Dsu
     int *rank;
 } Dsu;
 
+void print_container(GraphVertex *container, int size)
+{
+    for(int i = 0; i < size; i++)
+        printf("%d ",container[i].weight);
+    printf("\n");
+}
+
+
+// find & unite algorithm
 int find(int i, int *parent)
 {
     if(parent[i] == -1)
@@ -32,6 +41,8 @@ void unite(int x, int y, Dsu *dsu)
     }
 }
 
+
+//init
 void dsu_init(Dsu **dsu,int size)
 {
     (*dsu) = malloc(sizeof(Dsu));
@@ -67,9 +78,8 @@ void swap(GraphVertex *container, GraphVertex *container2)
     *container2 = container3;
 }
 
-/*
 //bubble sort
-void container_sort(GraphVertex *container, int size)
+void container_sort2(GraphVertex *container, int size)
 {
     int flag;
 
@@ -89,20 +99,16 @@ void container_sort(GraphVertex *container, int size)
             break;
     }
 }
-*/
 
-/*
 //select sort
-void container_sort(GraphVertex *container, int size)
+void container_sort3(GraphVertex *container, int size)
 {
     int pos;
     int k;
     int mid;
 
     mid = (float)size / 2 + 0.5;
-    //for(int i = 0; i < 13 ; i++)
-    //    printf("%d ",container[i].weight);
-    //printf("\n");
+    print_container(container, size);
     for (int i = 0; i < mid; i++)
     {
         pos = k = i;
@@ -124,17 +130,96 @@ void container_sort(GraphVertex *container, int size)
                 swap(container + size - 1 - i, container + pos);
         }
     }
-    //for(int i = 0; i < 13 ; i++)
-    //    printf("%d ",container[i].weight);
-    //printf("\n");
+    print_container(container, size);
 }
-*/
 
+int medianThree(int a, int b, int c) {
+    if ((a > b) ^ (a > c)) 
+        return a;
+    else if ((b < a) ^ (b < c)) 
+        return b;
+    else
+        return c;
+}
+
+int findMedian(GraphVertex *container, int n)
+{
+    if (n == 3)
+        return medianThree(container->weight, (container + 1)->weight, (container + 2)->weight);
+    return container->weight;
+}
+
+int partition(GraphVertex *container, int l, int r, int x)
+{
+    int i = 0;
+    for(i =l;i<r;i++)
+        if((container+i)->weight == x)
+            break;
+    swap(container + i, container + r);
+    i = l;
+    for(int j = l; j<= r-1;j++)
+    {
+        if((container + j)->weight <= x)
+        {
+            swap(container + i, container + j);
+            i++;
+        }
+    }
+    swap(container + i, container + r);
+    return i;
+}
+
+int kthSmallest(GraphVertex *container, int l, int r, int k)
+{
+    if(k > 0 && k <= r - l + 1)
+    {
+        int n = r-l+1;
+        int i;
+        GraphVertex *median = malloc((n+4)/3 * sizeof(GraphVertex));
+
+        for(i = 0; i<n/3;i++)
+            (median +i)->weight = findMedian(container+l+i*3, 3);
+        if(i*3<n)
+        {
+            (median+i)->weight = findMedian(container+l+i*3, n%3);
+            i++;
+        }
+        int medOfMEd = (i == 1) ? (median + i - 1)->weight : kthSmallest(median, 0, i-1, i/2);
+        int pos = partition(container, l, r, medOfMEd);
+        if(pos-l == k-1)
+        {
+            free(median);
+            return (container + pos)->weight;
+        }
+        if(pos-l > k-1)
+        {
+            free(median);
+            return kthSmallest(container, l, pos-1, k);
+        }
+        free(median);
+        return kthSmallest(container, pos+1,r, k-pos+l-1);
+    }
+    return -1;
+}
+
+void quickSort(GraphVertex *container, int l, int h)
+{
+    if(l < h)
+    {
+        int n = h-1+1;
+        int med = kthSmallest(container, l, h, n/2);
+        int p = partition(container, l, h, med);
+        quickSort(container, l, p-1);
+        quickSort(container, p+1, h);
+    }
+}
 
 //quick sort
 void container_sort(GraphVertex *container, int size)
 {
-
+    quickSort(container, 0, size - 1);
+    print_container(container, size);
+    printf("\n");
 }
 
 //insertion sort
