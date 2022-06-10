@@ -289,7 +289,6 @@ void mergeSort(GraphVertex *container, int l, int r)
         int m = l + (r - l) / 2;
         mergeSort(container, l, m);
         mergeSort(container, m + 1, r);
-
         merge(container, l, m, r);
     }
 }
@@ -300,16 +299,66 @@ void container_sort5(GraphVertex *container, int size)
     mergeSort(container, 0, size -1);
 }
 
+void heapify(GraphVertex *container, int n, int i)
+{
+    int largest = i;
+    int l = 2 * i + 1;
+    int r = 2 * i + 2;
+    if(l < n && (container+l)->weight > (container+largest)->weight)
+        largest = l;
+    if(r<n && (container + r)->weight > (container +largest)->weight)
+        largest = r;
+    if(largest != i)
+    {
+        swap(container + i, container + largest);
+        heapify(container, n, largest);
+    }
+}
+
 //heap sort
 void container_sort6(GraphVertex *container, int size)
 {
+    for(int i = size/2 - 1; i>= 0; i--)
+        heapify(container, size, i);
+    for(int i = size - 1; i>0;i--)
+    {
+        swap(container, container + i);
+        heapify(container, i, 0);
+    }
+}
 
+GraphVertex getMax(GraphVertex *container, int size)
+{
+    GraphVertex mx = *container;
+    for(int i = 1; i < size; i++)
+        if((container + i)->weight > mx.weight)
+            mx = *(container + i);
+    return mx;
+}
+
+void countSort(GraphVertex *container, int n, int exp)
+{
+    GraphVertex output[n];
+    int i, count[10] = {0};
+    for(i = 0; i< n;i++)
+        count[((container+i)->weight / exp) % 10]++;
+    for(i = 1; i<10;i++)
+        count[i] += count[i - 1];
+    for(i = n -1; i >= 0; i--)
+    {
+        output[count[((container + i)->weight /exp) % 10] - 1] = *(container + i);
+        count[((container + i)->weight / exp) % 10]--;
+    }
+    for(i = 0; i<n;i++)
+        *(container + i) = output[i];
 }
 
 //radix sort
 void container_sort7(GraphVertex *container, int size)
 {
-
+    GraphVertex m = getMax(container, size);
+    for(int exp = 1; m.weight/ exp > 0; exp *= 10)
+        countSort(container, size, exp);
 }
 
 void kruskalV2(LinkedList *list)
@@ -321,7 +370,7 @@ void kruskalV2(LinkedList *list)
     ans = 0;
     dsu_init(&s, list->currentElementCount);
     container_init(&container, list);
-    container_sort5(container, list->headerNode.data.count);
+    container_sort7(container, list->headerNode.data.count);
     for(int i = 0; i < list->headerNode.data.count; i++)
     {
         if(find((container + i)->vertexID, s->parent) != find((container + i)->parent_ID, s->parent))
