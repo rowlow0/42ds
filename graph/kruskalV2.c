@@ -134,7 +134,7 @@ void container_sort3(GraphVertex *container, int size)
 }
 
 int medianThree(int a, int b, int c) {
-    if ((a > b) ^ (a > c)) 
+    if ((a > b) ^ (a > c))
         return a;
     else if ((b < a) ^ (b < c)) 
         return b;
@@ -224,16 +224,93 @@ void container_sort(GraphVertex *container, int size)
 }
 
 //insertion sort
-void container_sor4(GraphVertex *container, int size)
+void container_sort4(GraphVertex *container, int size)
+{
+    int i, j;
+    GraphVertex key;
+    for(i = 1; i < size; i++)
+    {
+        key= *(container + i);
+        j = i - 1;
+        while(j >= 0 && (container + j)->weight > key.weight)
+        {
+            *(container + j + 1) = *(container + j);
+            j--;
+        }
+        *(container + j + 1) = key;
+    }
+}
+
+void merge(GraphVertex *container, int l, int m, int r)
+{
+    int i, j, k;
+    int n1 = m - l + 1;
+    int n2 = r - m;
+
+    GraphVertex L[n1], R[n2];
+
+    for (i = 0; i < n1; i++)
+        L[i] = container[l + i];
+    for (j = 0; j < n2; j++)
+        R[j] = container[m + 1 + j];
+ 
+    i = 0;
+    j = 0;
+    k = l;
+    while (i < n1 && j < n2) {
+        if (L[i].weight <= R[j].weight) {
+            container[k] = L[i];
+            i++;
+        }
+        else {
+            container[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+ 
+    while (i < n1) {
+        container[k] = L[i];
+        i++;
+        k++;
+    }
+ 
+    while (j < n2) {
+        container[k] = R[j];
+        j++;
+        k++;
+    }
+}
+
+void mergeSort(GraphVertex *container, int l, int r)
+{
+    if (l < r)
+    {
+        int m = l + (r - l) / 2;
+        mergeSort(container, l, m);
+        mergeSort(container, m + 1, r);
+
+        merge(container, l, m, r);
+    }
+}
+
+//merge sort
+void container_sort5(GraphVertex *container, int size)
+{
+    mergeSort(container, 0, size -1);
+}
+
+//heap sort
+void container_sort6(GraphVertex *container, int size)
 {
 
 }
 
-//merge sort
-
-//heap sort
-
 //radix sort
+void container_sort7(GraphVertex *container, int size)
+{
+
+}
 
 void kruskalV2(LinkedList *list)
 {
@@ -244,7 +321,7 @@ void kruskalV2(LinkedList *list)
     ans = 0;
     dsu_init(&s, list->currentElementCount);
     container_init(&container, list);
-    container_sort4(container, list->headerNode.data.count);
+    container_sort5(container, list->headerNode.data.count);
     for(int i = 0; i < list->headerNode.data.count; i++)
     {
         if(find((container + i)->vertexID, s->parent) != find((container + i)->parent_ID, s->parent))
