@@ -175,7 +175,7 @@ int kthSmallest(GraphVertex *container, int l, int r, int k)
     {
         int n = r-l+1;
         int i;
-        GraphVertex *median = malloc((n+4)/3 * sizeof(GraphVertex));
+        GraphVertex *median = malloc((n+2)/3 * sizeof(GraphVertex));
 
         for(i = 0; i<n/3;i++)
             (median +i)->weight = findMedian(container+l+i*3, 3);
@@ -185,19 +185,14 @@ int kthSmallest(GraphVertex *container, int l, int r, int k)
             i++;
         }
         int medOfMEd = (i == 1) ? (median + i - 1)->weight : kthSmallest(median, 0, i-1, i/2);
+        free(median);
         int pos = partition(container, l, r, medOfMEd);
         if(pos-l == k-1)
-        {
-            free(median);
             return (container + pos)->weight;
-        }
         if(pos-l > k-1)
-        {
-            free(median);
             return kthSmallest(container, l, pos-1, k);
-        }
-        free(median);
-        return kthSmallest(container, pos+1,r, k-pos+l-1);
+        else
+            return kthSmallest(container, pos+1,r, k-pos+l-1);
     }
     return -1;
 }
@@ -215,6 +210,12 @@ void quickSort(GraphVertex *container, int l, int h)
 }
 
 //quick sort
+/*
+randomly picking up
+using insertion sort for small sized array to reduce recursive calls.
+tail recursive
+intro sort
+*/
 void container_sort(GraphVertex *container, int size)
 {
     quickSort(container, 0, size - 1);
@@ -223,6 +224,10 @@ void container_sort(GraphVertex *container, int size)
 }
 
 //insertion sort
+void container_sor4(GraphVertex *container, int size)
+{
+
+}
 
 //merge sort
 
@@ -239,7 +244,7 @@ void kruskalV2(LinkedList *list)
     ans = 0;
     dsu_init(&s, list->currentElementCount);
     container_init(&container, list);
-    container_sort(container, list->headerNode.data.count);
+    container_sort4(container, list->headerNode.data.count);
     for(int i = 0; i < list->headerNode.data.count; i++)
     {
         if(find((container + i)->vertexID, s->parent) != find((container + i)->parent_ID, s->parent))
